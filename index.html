@@ -17,11 +17,12 @@
         .section-header { font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 15px 0 8px; padding: 5px 10px; border-radius: 4px; color: white; background: var(--blue); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         label { font-size: 0.65rem; font-weight: 600; color: #555; display: block; margin-bottom: 2px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background: var(--yellow); box-sizing: border-box; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background: var(--yellow); box-sizing: border-box; }
         .results-area { display: none; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px; }
         .res-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         .res-val { font-weight: bold; color: #000; }
         .highlight { color: var(--blue); font-weight: bold; }
+        .clinical-note { font-size: 0.7rem; color: #666; font-style: italic; margin-top: 8px; line-height: 1.2; }
     </style>
 </head>
 <body>
@@ -87,6 +88,18 @@
     <div id="preonly" class="tab-content">
         <div class="card">
             <h2>Vancomycin Pre-Only</h2>
+            
+            <div>
+                <label>Calculation Method</label>
+                <select id="po_method" onchange="togglePoMethod()">
+                    <option value="bolus">Bolus Method (Standard)</option>
+                    <option value="existing">Existing Ke Method (Previous Levels)</option>
+                </select>
+                <div id="po_method_note" class="clinical-note" style="margin-bottom:10px;">
+                    Note: Method used to estimate pharmacokinetic parameters.
+                </div>
+            </div>
+
             <div class="grid">
                 <div><label>Pre Level (mg/L)</label><input type="number" id="P_pre" class="trig-2"></div>
                 <div><label>Weight (kg)</label><input type="number" id="P_wt" class="trig-2"></div>
@@ -95,12 +108,21 @@
                 <div><label>Interval (h)</label><input type="number" id="P_tau" class="trig-2"></div>
                 <div><label>Infusion duration (h)</label><input type="number" id="P_tinf" class="trig-2"></div>
                 <div style="grid-column: span 2;"><label>Sampling–Dose Interval (Δt) (h)</label><input type="number" id="P_dt" class="trig-2"></div>
+                
+                <div id="row_prev_ke" style="grid-column: span 2; display:none;">
+                    <label>Previous Ke (h⁻¹)</label>
+                    <input type="number" id="P_prev_ke" class="trig-2" step="0.0001">
+                    <div class="clinical-note">Use if: RP Stable, No major fluid shifts, Same clinical phase.</div>
+                </div>
             </div>
+
             <div id="res_pk_2" class="results-area">
+                <div id="po_method_tag" style="font-size:0.6rem; font-weight:bold; color:var(--blue); text-transform:uppercase;"></div>
                 <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke"></span></div>
                 <div class="res-row"><span>t½ (h)</span><span class="res-val" id="po_Thalf"></span></div>
-                <div class="res-row"><span>Cmax (Bolus) (mg/L)</span><span class="res-val" id="po_Cx"></span></div>
+                <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="po_Cx"></span></div>
                 <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="po_Au"></span></div>
+                <div class="clinical-note" id="po_caution">*May overestimate AUC24, to interpret with caution and correlate clinically.</div>
             </div>
 
             <div class="section-header" style="background:var(--green)">New Dose Adjustment</div>
@@ -138,6 +160,21 @@
             for (i = 0; i < tl.length; i++) tl[i].classList.remove("active");
             document.getElementById(tN).style.display = "block";
             evt.currentTarget.classList.add("active");
+        }
+
+        function togglePoMethod() {
+            const method = document.getElementById('po_method').value;
+            const prevKeRow = document.getElementById('row_prev_ke');
+            const caution = document.getElementById('po_caution');
+            
+            if (method === 'existing') {
+                prevKeRow.style.display = 'block';
+                caution.style.display = 'none';
+            } else {
+                prevKeRow.style.display = 'none';
+                caution.style.display = 'block';
+            }
+            calculatePreOnly();
         }
 
         function calculatePrePost() {
@@ -190,14 +227,30 @@
             const cp=parseFloat(document.getElementById('P_pre').value), bw=parseFloat(document.getElementById('P_wt').value),
                   vk=parseFloat(document.getElementById('P_vdkg').value), ds=parseFloat(document.getElementById('P_dose').value),
                   tu=parseFloat(document.getElementById('P_tau').value), ti=parseFloat(document.getElementById('P_tinf').value),
-                  dt=parseFloat(document.getElementById('P_dt').value);
+                  dt=parseFloat(document.getElementById('P_dt').value), method=document.getElementById('po_method').value,
+                  prevKe=parseFloat(document.getElementById('P_prev_ke').value);
 
-            if(!cp || !ds || !tu || !vk || !bw || !ti || isNaN(dt)) {
+            // Basic validation
+            if(!cp || !bw || !vk || !ds || !tu || !ti || isNaN(dt)) {
                 document.getElementById('res_pk_2').style.display = 'none';
                 return;
             }
-            const Cx = cp + (ds / (vk * bw));
-            const Ke = (Math.log(Cx) - Math.log(cp)) / (tu - dt);
+
+            let Ke, Cx;
+
+            if (method === 'existing') {
+                if (!prevKe) { document.getElementById('res_pk_2').style.display = 'none'; return; }
+                Ke = prevKe;
+                // Cmax = Cmin * exp(Ke * (Tau - Tinf - DeltaT))
+                Cx = cp * Math.exp(Ke * (tu - ti - dt));
+                document.getElementById('po_method_tag').innerText = "Existing Ke Method";
+            } else {
+                // Bolus Method
+                Cx = cp + (ds / (vk * bw));
+                Ke = (Math.log(Cx) - Math.log(cp)) / (tu - dt);
+                document.getElementById('po_method_tag').innerText = "Bolus Method";
+            }
+
             const AUC24 = (((ti * (cp + Cx)/2) + ((Cx - cp)/Ke)) * (24 / tu));
 
             document.getElementById('po_Ke').innerText = Ke.toFixed(4);
