@@ -18,11 +18,8 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         label { font-size: 0.65rem; font-weight: 600; color: #555; display: block; margin-bottom: 2px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background: var(--yellow); box-sizing: border-box; }
-        
-        /* Main PK results visible by default, others hidden until ready */
         .results-area { background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px; }
         .hidden-results { display: none; }
-        
         .res-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         .res-val { font-weight: bold; color: #000; }
         .highlight { color: var(--blue); font-weight: bold; }
@@ -93,7 +90,6 @@
     <div id="preonly" class="tab-content">
         <div class="card">
             <h2>Vancomycin Pre-Only</h2>
-            
             <div>
                 <label>Calculation Method</label>
                 <select id="po_method" onchange="togglePoMethod()">
@@ -111,7 +107,6 @@
                     <label>Prior Calculated Ke (h⁻¹)</label>
                     <input type="number" id="P_prev_ke" class="trig-2" step="0.0001">
                 </div>
-
                 <div><label>Pre Level (mg/L)</label><input type="number" id="P_pre" class="trig-2"></div>
                 <div><label>Weight (kg)</label><input type="number" id="P_wt" class="trig-2"></div>
                 <div><label>Vd (L/kg)</label><input type="number" id="P_vdkg" class="trig-2"></div>
@@ -126,6 +121,7 @@
                 <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke">---</span></div>
                 <div class="res-row"><span>t½ (h)</span><span class="res-val" id="po_Thalf">---</span></div>
                 <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="po_Cx">---</span></div>
+                <div id="po_cmin_row" class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="po_Cn">---</span></div>
                 <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="po_Au">---</span></div>
                 <div class="clinical-note" id="po_caution" style="display:none;">*May overestimate AUC24, to interpret with caution and correlate clinically.</div>
             </div>
@@ -137,8 +133,8 @@
                 <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="pn_inf" class="trig-2"></div>
             </div>
             <div id="res_adj_2" class="results-area hidden-results" style="background:#e8f5e9;">
-                <div class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx"></span></div>
-                <div class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn"></span></div>
+                <div id="pn_exp_cmax_row" class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx"></span></div>
+                <div id="pn_exp_cmin_row" class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn"></span></div>
                 <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--green)" id="po_ExpAu"></span></div>
             </div>
 
@@ -172,20 +168,23 @@
             const prevKeRow = document.getElementById('row_prev_ke');
             const stabilityBox = document.getElementById('stability_criteria');
             const caution = document.getElementById('po_caution');
+            const poCminRow = document.getElementById('po_cmin_row');
             
             if (method === 'existing') {
                 prevKeRow.style.display = 'block';
                 stabilityBox.style.display = 'block';
                 caution.style.display = 'none';
+                poCminRow.style.display = 'flex';
             } else {
                 prevKeRow.style.display = 'none';
                 stabilityBox.style.display = 'none';
                 caution.style.display = 'block';
+                poCminRow.style.display = 'none';
             }
-            // Reset visible labels but keep PK box visible
             document.getElementById('po_Ke').innerText = "---";
             document.getElementById('po_Thalf').innerText = "---";
             document.getElementById('po_Cx').innerText = "---";
+            document.getElementById('po_Cn').innerText = "---";
             document.getElementById('po_Au').innerText = "---";
             calculatePreOnly();
         }
@@ -198,7 +197,6 @@
                   c18=parseFloat(document.getElementById('C18').value);
             
             if(!c7 || !c8 || !c10 || !c11 || !c12 || !c13 || isNaN(c18-c17)) {
-                // Keep box visible but show placeholders
                 document.getElementById('out_Ke').innerText = "---";
                 document.getElementById('out_Thalf').innerText = "---";
                 document.getElementById('out_Vdkg').innerText = "---";
@@ -252,20 +250,21 @@
                 document.getElementById('po_Ke').innerText = "---";
                 document.getElementById('po_Thalf').innerText = "---";
                 document.getElementById('po_Cx').innerText = "---";
+                document.getElementById('po_Cn').innerText = "---";
                 document.getElementById('po_Au').innerText = "---";
                 return;
             }
 
-            let Ke, Cx;
+            let Ke, Cx, Cn;
 
             if (method === 'existing') {
-                if (!prevKe) {
-                    document.getElementById('po_Ke').innerText = "---";
-                    return; 
-                }
+                if (!prevKe) { document.getElementById('po_Ke').innerText = "---"; return; }
                 Ke = prevKe;
+                // Formulas provided for Prior Ke
                 Cx = cp * Math.exp(Ke * (tu - ti - dt));
+                Cn = cp * Math.exp(-Ke * dt);
                 document.getElementById('po_method_tag').innerText = "Prior Ke Method";
+                document.getElementById('po_Cn').innerText = Cn.toFixed(2);
             } else {
                 Cx = cp + (ds / (vk * bw));
                 Ke = (Math.log(Cx) - Math.log(cp)) / (tu - dt);
@@ -280,12 +279,23 @@
             document.getElementById('po_Au').innerText = AUC24.toFixed(2);
 
             const pnd = parseFloat(document.getElementById('pn_dose').value), pnt = parseFloat(document.getElementById('pn_tau').value), pni = parseFloat(document.getElementById('pn_inf').value);
+            
             if(pnd && pnt && pni) {
                 const exCx = (pnd / (vk * bw * Ke * pni)) * ((1 - Math.exp(-Ke * pni)) / (1 - Math.exp(-Ke * pnt)));
                 const exCn = exCx * Math.exp(-Ke * (pnt - pni));
-                document.getElementById('po_ExpCx').innerText = exCx.toFixed(2);
-                document.getElementById('po_ExpCn').innerText = exCn.toFixed(2);
-                document.getElementById('po_ExpAu').innerText = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
+                const exAu = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
+                
+                document.getElementById('po_ExpAu').innerText = exAu;
+
+                if (method === 'existing') {
+                    document.getElementById('pn_exp_cmax_row').style.display = 'none';
+                    document.getElementById('pn_exp_cmin_row').style.display = 'none';
+                } else {
+                    document.getElementById('pn_exp_cmax_row').style.display = 'flex';
+                    document.getElementById('pn_exp_cmin_row').style.display = 'flex';
+                    document.getElementById('po_ExpCx').innerText = exCx.toFixed(2);
+                    document.getElementById('po_ExpCn').innerText = exCn.toFixed(2);
+                }
                 document.getElementById('res_adj_2').style.display = 'block';
             } else { document.getElementById('res_adj_2').style.display = 'none'; }
 
