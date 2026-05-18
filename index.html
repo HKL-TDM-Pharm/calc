@@ -271,7 +271,7 @@
                 document.getElementById('po_method_tag').innerText = "Bolus Method";
             }
 
-            const AUC24 = (((ti * (cp + Cx)/2) + ((Cx - cp)/Ke)) * (24 / tu));
+            const AUC24 = (((ti * (cn + Cx)/2) + ((Cx - cn)/Ke)) * (24 / tu));
 
             document.getElementById('po_Ke').innerText = Ke.toFixed(4);
             document.getElementById('po_Thalf').innerText = (0.693/Ke).toFixed(2);
