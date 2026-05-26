@@ -6,63 +6,65 @@
     <title>HKL TDM Assist</title>
     <style>
         :root {
-            --primary: #0f172a;
-            --sidebar: #1e293b;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --accent-vanco: #334155;
-            --yellow-input: #fffde7;
-            --blue-highlight: #3498db;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --main-bg: #f1f5f9;
+            --vanco-slate: #334155;
+            --accent-blue: #3b82f6;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; display: flex; height: 100vh; overflow: hidden; color: #334155; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--main-bg); margin: 0; display: flex; height: 100vh; color: #1e293b; }
 
-        /* SIDEBAR */
-        .sidebar { width: 280px; background: var(--sidebar); color: white; display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s; }
-        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .sidebar-header h1 { font-size: 1.2rem; margin: 0; letter-spacing: 1px; }
-        .nav-scroll { flex-grow: 1; overflow-y: auto; padding: 20px 0; }
-        .nav-label { font-size: 0.7rem; text-transform: uppercase; padding: 10px 25px; color: #94a3b8; font-weight: bold; letter-spacing: 1px; }
-        .nav-item { padding: 12px 25px; cursor: pointer; display: flex; align-items: center; font-size: 0.9rem; transition: 0.2s; color: #cbd5e1; }
-        .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
-        .nav-item.active { background: var(--blue-highlight); color: white; }
+        /* SIDEBAR STYLES */
+        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h1 { font-size: 1.1rem; margin: 0; letter-spacing: 1px; font-weight: 800; }
+        .nav-list { flex-grow: 1; padding: 20px 0; }
+        .nav-label { font-size: 0.65rem; text-transform: uppercase; padding: 10px 25px; color: #64748b; font-weight: 700; letter-spacing: 1px; }
+        .nav-item { padding: 12px 25px; cursor: pointer; display: flex; align-items: center; transition: 0.2s; color: #94a3b8; font-size: 0.9rem; }
+        .nav-item:hover { background: var(--sidebar-hover); color: white; }
+        .nav-item.active { background: var(--accent-blue); color: white; font-weight: bold; }
 
         /* MAIN CONTENT AREA */
         .main { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; }
-        .top-bar { padding: 15px 30px; background: white; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
-        .content-container { padding: 25px; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .header-bar { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 30px; max-width: 1000px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* DASHBOARD GRID */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .tool-card { 
+        /* DASHBOARD GRID (The i-Rx Hub Look) */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .card-btn { 
             background: white; border-radius: 16px; padding: 25px; cursor: pointer; transition: 0.3s; 
-            border: 1px solid #e2e8f0; position: relative; border-top: 5px solid var(--accent-vanco);
+            border: 1px solid #e2e8f0; position: relative; border-top: 6px solid var(--vanco-slate);
+            box-shadow: var(--card-shadow);
         }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.05); }
-        .badge { position: absolute; top: 15px; right: 15px; font-size: 0.65rem; background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 20px; font-weight: bold; border: 1px solid #e2e8f0; }
-        .icon-box { width: 50px; height: 50px; border-radius: 12px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 15px; }
+        .card-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        .icon-circ { width: 50px; height: 50px; border-radius: 12px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .card-btn h3 { margin: 0 0 10px 0; color: #0f172a; font-size: 1.1rem; }
+        .card-btn p { margin: 0; color: #64748b; font-size: 0.85rem; line-height: 1.5; }
+        .tag { position: absolute; top: 15px; right: 15px; font-size: 0.6rem; font-weight: 800; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; }
 
-        /* CALCULATOR UI */
-        .calc-view { display: none; }
-        .back-link { cursor: pointer; color: var(--blue-highlight); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; margin-bottom: 20px; }
-        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        /* CALCULATOR PAGES */
+        .page { display: none; }
+        .back-btn { display: inline-flex; align-items: center; color: var(--accent-blue); cursor: pointer; font-weight: 600; margin-bottom: 20px; font-size: 0.9rem; }
+        .calc-card { background: white; border-radius: 16px; padding: 30px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
         
+        /* INPUT STYLES */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: var(--yellow-input); box-sizing: border-box; }
-        .section-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px; padding: 8px 12px; border-radius: 6px; color: white; background: var(--sidebar); }
-        .results-area { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-top: 15px; }
-        .res-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
-        .res-val { font-weight: bold; color: #0f172a; }
-        .highlight { color: var(--blue-highlight); font-weight: bold; }
-        .clinical-note { font-size: 0.75rem; color: #64748b; font-style: italic; margin-top: 10px; line-height: 1.4; }
-        .stability-box { background: #f0f9ff; padding: 12px; border-radius: 8px; border-left: 4px solid var(--blue-highlight); margin-bottom: 20px; }
-        .hidden-results { display: none; }
+        label { font-size: 0.65rem; font-weight: 800; color: #475569; text-transform: uppercase; display: block; margin-bottom: 6px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1rem; background: #fffde7; box-sizing: border-box; }
+        .section-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px; padding: 10px; border-radius: 8px; color: white; background: var(--sidebar-bg); }
+        .results-area { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; }
+        .res-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+        .res-val { font-weight: 700; color: #0f172a; }
+        .highlight { color: var(--accent-blue); }
+        .stability-box { background: #eff6ff; padding: 12px; border-radius: 10px; border-left: 4px solid var(--accent-blue); margin-bottom: 20px; }
+        .clinical-note { font-size: 0.75rem; color: #64748b; font-style: italic; margin-top: 5px; }
 
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .grid { grid-template-columns: 1fr; }
-            .content-container { padding: 15px; }
+            .container { padding: 15px; }
         }
     </style>
 </head>
@@ -70,45 +72,44 @@
 
     <div class="sidebar">
         <div class="sidebar-header"><h1>HKL TDM Assist</h1></div>
-        <div class="nav-scroll">
-            <div class="nav-item active" id="nav-dash" onclick="showView('dashboard')">🏠 Dashboard</div>
+        <div class="nav-list">
+            <div class="nav-item active" id="nav-dash" onclick="showPage('dashboard')">🏠 Dashboard</div>
             
             <div class="nav-label">Vancomycin</div>
-            <div class="nav-item" id="nav-pp" onclick="showView('vanco-pp')">💊 Pre & Post Levels</div>
-            <div class="nav-item" id="nav-po" onclick="showView('vanco-po')">💊 Pre Level Only</div>
-
-            </div>
+            <div class="nav-item" id="nav-pp" onclick="showPage('vanco-pp')">💊 Pre & Post Levels</div>
+            <div class="nav-item" id="nav-po" onclick="showPage('vanco-po')">💊 Pre Level Only</div>
+        </div>
     </div>
 
     <div class="main">
-        <div class="top-bar">
-            <div id="top-title" style="font-weight: 700; color: var(--primary);">Clinical Dashboard</div>
-            <div style="font-size: 0.75rem; color: #64748b; text-align: right;">Hospital Kuala Lumpur<br>Pharmacy Department</div>
+        <div class="header-bar">
+            <div id="page-title" style="font-weight: 700; font-size: 1.1rem;">Clinical Dashboard</div>
+            <div style="font-size: 0.7rem; color: #64748b; text-align: right;">Hospital Kuala Lumpur<br>Pharmacy Unit</div>
         </div>
 
-        <div class="content-container">
+        <div class="container">
             
-            <div id="view-dashboard" class="calc-view" style="display: block;">
+            <div id="page-dashboard" class="page" style="display: block;">
                 <div class="dashboard-grid">
-                    <div class="tool-card vanco" onclick="showView('vanco-pp')">
-                        <span class="badge">VALIDATED</span>
-                        <div class="icon-box">📊</div>
+                    <div class="card-btn" onclick="showPage('vanco-pp')">
+                        <span class="tag">VALIDATED</span>
+                        <div class="icon-circ">📊</div>
                         <h3>Vancomycin (Pre & Post)</h3>
-                        <p>Steady-state calculations using peak and trough levels.</p>
+                        <p>Detailed steady-state pharmacokinetic analysis using peak and trough levels.</p>
                     </div>
-                    <div class="tool-card vanco" onclick="showView('vanco-po')">
-                        <span class="badge">VALIDATED</span>
-                        <div class="icon-box">📉</div>
+                    <div class="card-btn" onclick="showPage('vanco-po')">
+                        <span class="tag">VALIDATED</span>
+                        <div class="icon-circ">📉</div>
                         <h3>Vancomycin (Pre Only)</h3>
-                        <p>Calculate using Bolus or Prior Ke methods.</p>
+                        <p>Calculate PK parameters using Prior Ke or Bolus methods when only trough is available.</p>
                     </div>
                 </div>
             </div>
 
-            <div id="view-vanco-pp" class="calc-view">
-                <div class="back-link" onclick="showView('dashboard')">← Back to Dashboard</div>
-                <div class="card">
-                    <h2 style="color:var(--primary)">Vancomycin Pre & Post</h2>
+            <div id="page-vanco-pp" class="page">
+                <div class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</div>
+                <div class="calc-card">
+                    <h2 style="margin-top:0">Vancomycin Pre & Post</h2>
                     <div class="grid">
                         <div><label>Pre Level (mg/L)</label><input type="number" id="C7" class="trig-1"></div>
                         <div><label>Post Level (mg/L)</label><input type="number" id="C8" class="trig-1"></div>
@@ -133,36 +134,25 @@
                         <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="out_AUC">---</span></div>
                     </div>
 
-                    <div class="section-header" style="background:var(--green)">New Dose Adjustment</div>
+                    <div class="section-header" style="background:#059669">New Dose Adjustment</div>
                     <div class="grid">
                         <div><label>New Dose (mg)</label><input type="number" id="nD" class="trig-1"></div>
                         <div><label>New Interval (h)</label><input type="number" id="nT" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="nI" class="trig-1"></div>
                     </div>
-                    <div id="res_adj_1" class="results-area hidden-results" style="background:#f0fdf4;">
+                    <div id="res_adj_1" style="display:none;" class="results-area">
                         <div class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="eCx"></span></div>
                         <div class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="eCn"></span></div>
-                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--green)" id="eAu"></span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:#059669" id="eAu"></span></div>
                     </div>
-
-                    <div class="section-header" style="background:var(--red)">Time to Withhold</div>
-                    <div class="grid">
-                        <div><label>Cmeasured / Cmax</label><input type="number" id="Wm" placeholder="Blank=Cmax" class="trig-1"></div>
-                        <div><label>Target Level (mg/L)</label><input type="number" id="Wt" class="trig-1"></div>
-                        <div style="grid-column: span 2;"><label>Withhold Duration (h)</label><input type="number" id="Wd" class="trig-1"></div>
-                    </div>
-                    <div id="res_wh_1" class="results-area hidden-results" style="background:#fef2f2;">
-                        <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="whT"></span></div>
-                        <div class="res-row"><span>Exp. Cmin after w/h</span><span class="res-val highlight" id="whC"></span></div>
-                    </div>
-                    <button style="background:#64748b; width:100%; padding:14px; border:none; color:white; margin-top:20px; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Clear All Data</button>
+                    <button style="background:#64748b; width:100%; padding:15px; border:none; color:white; margin-top:20px; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
 
-            <div id="view-vanco-po" class="calc-view">
-                <div class="back-link" onclick="showView('dashboard')">← Back to Dashboard</div>
-                <div class="card">
-                    <h2 style="color:var(--primary)">Vancomycin Pre-Only</h2>
+            <div id="page-vanco-po" class="page">
+                <div class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</div>
+                <div class="calc-card">
+                    <h2 style="margin-top:0">Vancomycin Pre-Only</h2>
                     
                     <div style="margin-bottom:20px;">
                         <label>Calculation Method</label>
@@ -171,7 +161,7 @@
                             <option value="bolus">Bolus Method</option>
                         </select>
                         <div id="stability_criteria" class="stability-box" style="margin-top:10px;">
-                            <div style="font-weight:bold; color:var(--blue-highlight); margin-bottom:5px;">Use if:</div>
+                            <div style="font-weight:bold; color:var(--accent-blue); margin-bottom:4px;">Use if:</div>
                             <div class="clinical-note" style="margin-top:0;">RP Stable, No major fluid shifts, Same clinical phase (not acute AKI recovery, etc.)</div>
                         </div>
                     </div>
@@ -191,7 +181,7 @@
                     </div>
 
                     <div class="results-area">
-                        <div id="po_method_tag" style="font-size:0.65rem; font-weight:800; color:var(--blue-highlight); margin-bottom:10px;">METHOD PARAMETERS</div>
+                        <div id="po_method_tag" style="font-size:0.65rem; font-weight:800; color:var(--accent-blue); margin-bottom:10px;">METHOD PARAMETERS</div>
                         <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke">---</span></div>
                         <div class="res-row"><span>t½ (h)</span><span class="res-val" id="po_Thalf">---</span></div>
                         <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="po_Cx">---</span></div>
@@ -200,29 +190,18 @@
                         <div class="clinical-note" id="po_caution" style="display:none;">*May overestimate AUC24, to interpret with caution and correlate clinically.</div>
                     </div>
 
-                    <div class="section-header" style="background:var(--green)">New Dose Adjustment</div>
+                    <div class="section-header" style="background:#059669">New Dose Adjustment</div>
                     <div class="grid">
                         <div><label>New Dose (mg)</label><input type="number" id="pn_dose" class="trig-2"></div>
                         <div><label>New Interval (h)</label><input type="number" id="pn_tau" class="trig-2"></div>
                         <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="pn_inf" class="trig-2"></div>
                     </div>
-                    <div id="res_adj_2" class="results-area hidden-results" style="background:#f0fdf4;">
+                    <div id="res_adj_2" style="display:none;" class="results-area">
                         <div id="pn_exp_cmax_row" class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx"></span></div>
                         <div id="pn_exp_cmin_row" class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn"></span></div>
-                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--green)" id="po_ExpAu"></span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:#059669" id="po_ExpAu"></span></div>
                     </div>
-
-                    <div class="section-header" style="background:var(--red)">Time to Withhold</div>
-                    <div class="grid">
-                        <div><label>Cmeasured / Cmax</label><input type="number" id="P_mw" placeholder="Blank=Cmax" class="trig-2"></div>
-                        <div><label>Target Level (mg/L)</label><input type="number" id="P_tw" class="trig-2"></div>
-                        <div style="grid-column: span 2;"><label>Withhold Duration (h)</label><input type="number" id="P_wd" class="trig-2"></div>
-                    </div>
-                    <div id="res_wh_2" class="results-area hidden-results" style="background:#fef2f2;">
-                        <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="po_wh"></span></div>
-                        <div class="res-row"><span>Exp. Cmin after w/h</span><span class="res-val highlight" id="po_whC"></span></div>
-                    </div>
-                    <button style="background:#64748b; width:100%; padding:14px; border:none; color:white; margin-top:20px; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Clear All Data</button>
+                    <button style="background:#64748b; width:100%; padding:15px; border:none; color:white; margin-top:20px; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
 
@@ -230,45 +209,29 @@
     </div>
 
     <script>
-        // NAVIGATION LOGIC
-        function showView(viewId) {
-            document.querySelectorAll('.calc-view').forEach(v => v.style.display = 'none');
-            document.getElementById('view-' + viewId).style.display = 'block';
+        // PAGE NAVIGATION
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById('page-' + pageId).style.display = 'block';
             
-            // Update sidebar active state
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if(viewId === 'dashboard') document.getElementById('nav-dash').classList.add('active');
-            if(viewId === 'vanco-pp') document.getElementById('nav-pp').classList.add('active');
-            if(viewId === 'vanco-po') document.getElementById('nav-po').classList.add('active');
+            if(pageId === 'dashboard') document.getElementById('nav-dash').classList.add('active');
+            if(pageId === 'vanco-pp') document.getElementById('nav-pp').classList.add('active');
+            if(pageId === 'vanco-po') document.getElementById('nav-po').classList.add('active');
 
             const titles = {'dashboard':'Clinical Dashboard', 'vanco-pp':'Vancomycin Pre & Post', 'vanco-po':'Vancomycin Pre-Only'};
-            document.getElementById('top-title').innerText = titles[viewId];
+            document.getElementById('page-title').innerText = titles[pageId];
             window.scrollTo(0,0);
         }
 
+        // --- CALCULATION LOGIC ---
+
         function togglePoMethod() {
             const method = document.getElementById('po_method').value;
-            const prevKeRow = document.getElementById('row_prev_ke');
-            const stabilityBox = document.getElementById('stability_criteria');
-            const caution = document.getElementById('po_caution');
-            const poCminRow = document.getElementById('po_cmin_row');
-            
-            if (method === 'existing') {
-                prevKeRow.style.display = 'block';
-                stabilityBox.style.display = 'block';
-                caution.style.display = 'none';
-                poCminRow.style.display = 'flex';
-            } else {
-                prevKeRow.style.display = 'none';
-                stabilityBox.style.display = 'none';
-                caution.style.display = 'block';
-                poCminRow.style.display = 'none';
-            }
-            document.getElementById('po_Ke').innerText = "---";
-            document.getElementById('po_Thalf').innerText = "---";
-            document.getElementById('po_Cx').innerText = "---";
-            document.getElementById('po_Cn').innerText = "---";
-            document.getElementById('po_Au').innerText = "---";
+            document.getElementById('row_prev_ke').style.display = (method === 'existing') ? 'block' : 'none';
+            document.getElementById('stability_criteria').style.display = (method === 'existing') ? 'block' : 'none';
+            document.getElementById('po_caution').style.display = (method === 'existing') ? 'none' : 'block';
+            document.getElementById('po_cmin_row').style.display = (method === 'existing') ? 'flex' : 'none';
             calculatePreOnly();
         }
 
@@ -279,26 +242,17 @@
                   c16=parseFloat(document.getElementById('C16').value), c17=parseFloat(document.getElementById('C17').value), 
                   c18=parseFloat(document.getElementById('C18').value);
             
-            if(!c7 || !c8 || !c10 || !c11 || !c12 || !c13 || isNaN(c18-c17)) {
-                document.getElementById('out_Ke').innerText = "---";
-                document.getElementById('out_Thalf').innerText = "---";
-                document.getElementById('out_Vdkg').innerText = "---";
-                document.getElementById('out_Cmax').innerText = "---";
-                document.getElementById('out_Cmin').innerText = "---";
-                document.getElementById('out_AUC').innerText = "---";
-                return;
-            }
+            if(!c7 || !c8 || !c10 || !c11 || !c12 || !c13 || isNaN(c18-c17)) return;
 
             const Ke = (Math.log(c8) - Math.log(c7)) / (c12 - (c18 - c17));
             const Cmax = c8 * Math.exp(Ke * (c18 - c16));
             const Cmin = Cmax * Math.exp(-Ke * (c12 - c13));
-            const Vd_kg = (c11 * (1 - Math.exp(-Ke * c13))) / (Cmax * c13 * Ke * (1 - Math.exp(-Ke * c12))) / c10;
-            const Vd_L = Vd_kg * c10;
-            const AUC24 = (((c13 * (Cmin + Cmax)/2) + ((Cmax - Cmin)/Ke)) * (24 / c12));
+            const Vd_L = (c11 * (1 - Math.exp(-Ke * c13))) / (Cmax * c13 * Ke * (1 - Math.exp(-Ke * c12)));
+            const AUC24 = ((c13 * (Cmin + Cmax)/2) + ((Cmax - Cmin)/Ke)) * (24 / c12);
 
             document.getElementById('out_Ke').innerText = Ke.toFixed(4);
             document.getElementById('out_Thalf').innerText = (0.693/Ke).toFixed(2);
-            document.getElementById('out_Vdkg').innerText = Vd_kg.toFixed(2);
+            document.getElementById('out_Vdkg').innerText = (Vd_L / c10).toFixed(2);
             document.getElementById('out_Cmax').innerText = Cmax.toFixed(2);
             document.getElementById('out_Cmin').innerText = Cmin.toFixed(2);
             document.getElementById('out_AUC').innerText = AUC24.toFixed(2);
@@ -306,20 +260,11 @@
             const nD=parseFloat(document.getElementById('nD').value), nT=parseFloat(document.getElementById('nT').value), nI=parseFloat(document.getElementById('nI').value);
             if(nD && nT && nI){
                 const exCx = (nD / (Vd_L * Ke * nI)) * ((1 - Math.exp(-Ke * nI)) / (1 - Math.exp(-Ke * nT)));
-                const exCn = exCx * Math.exp(-Ke * (nT - nI));
                 document.getElementById('eCx').innerText = exCx.toFixed(2);
-                document.getElementById('eCn').innerText = exCn.toFixed(2);
+                document.getElementById('eCn').innerText = (exCx * Math.exp(-Ke * (nT - nI))).toFixed(2);
                 document.getElementById('eAu').innerText = (((nD * 24 / nT) / (c11 * 24 / c12)) * AUC24).toFixed(2);
                 document.getElementById('res_adj_1').style.display = 'block';
-            } else { document.getElementById('res_adj_1').style.display = 'none'; }
-
-            const WmIn=parseFloat(document.getElementById('Wm').value), Wt=parseFloat(document.getElementById('Wt').value), Wd=parseFloat(document.getElementById('Wd').value);
-            const Wm = !isNaN(WmIn) ? WmIn : Cmax;
-            if(Wm && (Wt || Wd)) {
-                if(Wt) document.getElementById('whT').innerText = ((Math.log(Wm)-Math.log(Wt))/Ke).toFixed(2);
-                if(Wd) document.getElementById('whC').innerText = (Wm*Math.exp(-Ke*Wd)).toFixed(2);
-                document.getElementById('res_wh_1').style.display = 'block';
-            } else { document.getElementById('res_wh_1').style.display = 'none'; }
+            }
         }
 
         function calculatePreOnly() {
@@ -329,35 +274,21 @@
                   dt=parseFloat(document.getElementById('P_dt').value), method=document.getElementById('po_method').value,
                   prevKe=parseFloat(document.getElementById('P_prev_ke').value);
 
-            if(!cp || !bw || !vk || !ds || !tu || !ti || isNaN(dt)) {
-                document.getElementById('po_Ke').innerText = "---";
-                document.getElementById('po_Thalf').innerText = "---";
-                document.getElementById('po_Cx').innerText = "---";
-                document.getElementById('po_Cn').innerText = "---";
-                document.getElementById('po_Au').innerText = "---";
-                return;
-            }
+            if(!cp || !bw || !vk || !ds || !tu || !ti || isNaN(dt)) return;
 
             let Ke, Cx, Cn;
-
             if (method === 'existing') {
-                if (!prevKe) { document.getElementById('po_Ke').innerText = "---"; return; }
-                Ke = prevKe;
+                if (!prevKe) return; Ke = prevKe;
                 Cx = cp * Math.exp(Ke * (tu - ti - dt));
                 Cn = cp * Math.exp(-Ke * dt);
-                document.getElementById('po_method_tag').innerText = "Prior Ke Method";
                 document.getElementById('po_Cn').innerText = Cn.toFixed(2);
             } else {
                 Cx = cp + (ds / (vk * bw));
                 Ke = (Math.log(Cx) - Math.log(cp)) / (tu - dt);
-                Cn = cp; 
-                document.getElementById('po_method_tag').innerText = "Bolus Method";
+                Cn = cp;
             }
 
-            const AUC_inf = ti * ((Cx + Cn) / 2);
-            const AUC_elim = (Cx - Cn) / Ke;
-            const AUC24 = (AUC_inf + AUC_elim) * (24 / tu);
-
+            const AUC24 = ((ti * (Cx + Cn) / 2) + ((Cx - Cn) / Ke)) * (24 / tu);
             document.getElementById('po_Ke').innerText = Ke.toFixed(4);
             document.getElementById('po_Thalf').innerText = (0.693/Ke).toFixed(2);
             document.getElementById('po_Cx').innerText = Cx.toFixed(2);
@@ -366,29 +297,15 @@
             const pnd = parseFloat(document.getElementById('pn_dose').value), pnt = parseFloat(document.getElementById('pn_tau').value), pni = parseFloat(document.getElementById('pn_inf').value);
             if(pnd && pnt && pni) {
                 const exCx = (pnd / (vk * bw * Ke * pni)) * ((1 - Math.exp(-Ke * pni)) / (1 - Math.exp(-Ke * pnt)));
-                const exCn = exCx * Math.exp(-Ke * (pnt - pni));
-                const exAu = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
-                document.getElementById('po_ExpAu').innerText = exAu;
-
-                if (method === 'existing') {
-                    document.getElementById('pn_exp_cmax_row').style.display = 'none';
-                    document.getElementById('pn_exp_cmin_row').style.display = 'none';
-                } else {
-                    document.getElementById('pn_exp_cmax_row').style.display = 'flex';
-                    document.getElementById('pn_exp_cmin_row').style.display = 'flex';
+                document.getElementById('po_ExpAu').innerText = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
+                document.getElementById('pn_exp_cmax_row').style.display = (method === 'existing') ? 'none' : 'flex';
+                document.getElementById('pn_exp_cmin_row').style.display = (method === 'existing') ? 'none' : 'flex';
+                if(method !== 'existing') {
                     document.getElementById('po_ExpCx').innerText = exCx.toFixed(2);
-                    document.getElementById('po_ExpCn').innerText = exCn.toFixed(2);
+                    document.getElementById('po_ExpCn').innerText = (exCx * Math.exp(-Ke * (pnt - pni))).toFixed(2);
                 }
                 document.getElementById('res_adj_2').style.display = 'block';
-            } else { document.getElementById('res_adj_2').style.display = 'none'; }
-
-            const pmIn=parseFloat(document.getElementById('P_mw').value), tw=parseFloat(document.getElementById('P_tw').value), pwd=parseFloat(document.getElementById('P_wd').value);
-            const pm = !isNaN(pmIn) ? pmIn : Cx;
-            if(pm && (tw || pwd)) {
-                if(tw) document.getElementById('po_wh').innerText = ((Math.log(pm)-Math.log(tw))/Ke).toFixed(2);
-                if(pwd) document.getElementById('po_whC').innerText = (pm*Math.exp(-Ke*pwd)).toFixed(2);
-                document.getElementById('res_wh_2').style.display = 'block';
-            } else { document.getElementById('res_wh_2').style.display = 'none'; }
+            }
         }
 
         document.querySelectorAll('.trig-1').forEach(el => el.addEventListener('input', calculatePrePost));
