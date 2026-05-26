@@ -5,103 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKL TDM Assist</title>
     <style>
-        :root { --dark: #0f172a; --bg: #f1f5f9; --blue: #3b82f6; }
-        body { font-family: sans-serif; background: var(--bg); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        .sidebar { width: 250px; background: var(--dark); color: white; display: flex; flex-direction: column; }
-        .nav-item { padding: 15px 25px; cursor: pointer; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
-        .nav-item:hover { background: #1e293b; }
-        .main { flex: 1; overflow-y: auto; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 800px; margin: auto; }
+        :root { --sidebar-bg: #0f172a; --main-bg: #f1f5f9; --blue: #3b82f6; }
+        body { font-family: sans-serif; background: var(--main-bg); margin: 0; display: flex; height: 100vh; color: #1e293b; overflow: hidden; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
+        .nav-list { flex-grow: 1; padding: 20px 0; overflow-y: auto; }
+        .nav-item { padding: 12px 25px; cursor: pointer; transition: 0.2s; color: #94a3b8; font-size: 0.9rem; }
+        .nav-item:hover { background: #1e293b; color: white; }
+        .nav-item.active { background: #1e293b; color: white; border-left: 4px solid var(--blue); padding-left: 21px; }
+        .main { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; }
+        .header-bar { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 25px; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         .page { display: none; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        label { font-size: 0.7rem; font-weight: bold; display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: #fffde7; }
-        .res-box { background: #f8fafc; padding: 15px; border-radius: 5px; border: 1px solid #eee; margin-top: 10px; }
-        .res-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
-        .bold { font-weight: bold; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .tool-card { background: white; border-radius: 12px; padding: 20px; cursor: pointer; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #334155; }
+        .tool-card:hover { transform: translateY(-3px); }
+        .calc-card { background: white; border-radius: 12px; padding: 25px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        label { font-size: 0.65rem; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #fffde7; box-sizing: border-box; }
+        .section-header { font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 20px 0 10px; padding: 10px; border-radius: 6px; color: white; background: var(--sidebar-bg); }
+        .results-area { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-top: 15px; }
+        .res-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+        .res-val { font-weight: bold; }
+        .back-btn { color: var(--blue); cursor: pointer; font-weight: bold; margin-bottom: 15px; display: inline-block; }
+        @media (max-width: 768px) { .sidebar { display: none; } .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div style="padding: 20px; font-weight: bold; border-bottom: 1px solid #334155;">HKL TDM</div>
-        <div class="nav-item" onclick="go('dash')">Dashboard</div>
-        <div class="nav-item" onclick="go('wt')">Weight Calc</div>
-        <div class="nav-item" onclick="go('cr')">CrCl Calc</div>
-        <div class="nav-item" onclick="go('v1')">Vanco Pre-Post</div>
-        <div class="nav-item" onclick="go('v2')">Vanco Pre-Only</div>
+        <div class="sidebar-header">HKL TDM Assist</div>
+        <div class="nav-list">
+            <div class="nav-item active" id="m-dash" onclick="go('dash')">Dashboard</div>
+            <div class="nav-item" id="m-wt" onclick="go('wt')">Dosing Weight</div>
+            <div class="nav-item" id="m-cr" onclick="go('cr')">CrCl Calc</div>
+            <div class="nav-item" id="m-pp" onclick="go('pp')">Vanco Pre-Post</div>
+            <div class="nav-item" id="m-po" onclick="go('po')">Vanco Pre-Only</div>
+        </div>
     </div>
     <div class="main">
-        <div id="p-dash" class="page" style="display:block">
-            <h2>Dashboard</h2>
-            <p>Select a tool from the sidebar to begin.</p>
+        <div class="header-bar">
+            <div id="t-title" style="font-weight: bold;">DASHBOARD</div>
+            <div style="font-size: 0.7rem; color: #64748b;">HKL PHARMACY</div>
         </div>
-        <div id="p-wt" class="page">
-            <div class="card">
-                <h3>Dosing Weight</h3>
-                <div class="grid">
-                    <div><label>Weight (kg)</label><input type="number" id="w" oninput="cw()"></div>
-                    <div><label>Height (cm)</label><input type="number" id="h" oninput="cw()"></div>
-                    <div><label>Gender</label><select id="g" onchange="cw()"><option value="M">Male</option><option value="F">Female</option></select></div>
-                </div>
-                <div class="res-box">
-                    <div class="res-row"><span>BMI</span><span id="r-bmi" class="bold">---</span></div>
-                    <div class="res-row"><span>IBW</span><span id="r-ibw" class="bold">---</span></div>
-                    <div class="res-row"><span>AdjBW</span><span id="r-adj" class="bold">---</span></div>
+        <div class="container">
+            <div id="p-dash" class="page" style="display: block;">
+                <div class="dashboard-grid">
+                    <div class="tool-card" onclick="go('wt')"><h3>Dosing Weight</h3><p>BMI, IBW, AdjBW.</p></div>
+                    <div class="tool-card" onclick="go('cr')"><h3>CrCl Calc</h3><p>Cockcroft-Gault.</p></div>
+                    <div class="tool-card" onclick="go('pp')"><h3>Vanco (P&P)</h3><p>Steady-state PK.</p></div>
+                    <div class="tool-card" onclick="go('po')"><h3>Vanco (PO)</h3><p>Prior Ke or Bolus.</p></div>
                 </div>
             </div>
-        </div>
-        <div id="p-cr" class="page">
-            <div class="card">
-                <h3>CrCl (Cockcroft-Gault)</h3>
-                <div class="grid">
-                    <div><label>Weight (kg)</label><input type="number" id="cw" oninput="cc()"></div>
-                    <div><label>Age</label><input type="number" id="ca" oninput="cc()"></div>
-                    <div><label>SCr (umol/L)</label><input type="number" id="cs" oninput="cc()"></div>
-                    <div><label>Gender</label><select id="cg" onchange="cc()"><option value="M">Male</option><option value="F">Female</option></select></div>
-                </div>
-                <div class="res-box">
-                    <div class="res-row"><span>CrCl (ml/min)</span><span id="r-cr" class="bold">---</span></div>
-                </div>
-            </div>
-        </div>
-        <div id="p-v1" class="page">
-            <div class="card">
-                <h3>Vanco Pre-Post</h3>
-                <div class="grid">
-                    <div><label>Pre Level</label><input type="number" id="v1-1" oninput="cv1()"></div>
-                    <div><label>Post Level</label><input type="number" id="v1-2" oninput="cv1()"></div>
-                    <div><label>Weight</label><input type="number" id="v1-3" oninput="cv1()"></div>
-                    <div><label>Dose</label><input type="number" id="v1-4" oninput="cv1()"></div>
-                    <div><label>Interval</label><input type="number" id="v1-5" oninput="cv1()"></div>
-                    <div><label>Infusion</label><input type="number" id="v1-6" oninput="cv1()"></div>
-                    <div><label>Inf. End</label><input type="number" id="v1-7" oninput="cv1()"></div>
-                    <div><label>Pre-Time</label><input type="number" id="v1-8" oninput="cv1()"></div>
-                    <div><label>Post-Time</label><input type="number" id="v1-9" oninput="cv1()"></div>
-                </div>
-                <div class="res-box">
-                    <div class="res-row"><span>Ke</span><span id="o1-ke" class="bold">---</span></div>
-                    <div class="res-row"><span>AUC24</span><span id="o1-au" class="bold" style="color:blue">---</span></div>
+            <div id="p-wt" class="page">
+                <div class="back-btn" onclick="go('dash')">Back</div>
+                <div class="calc-card">
+                    <h2>Weight Calc</h2>
+                    <div class="grid">
+                        <div><label>Weight (kg)</label><input type="number" id="w1" oninput="f_w()"></div>
+                        <div><label>Height (cm)</label><input type="number" id="h1" oninput="f_w()"></div>
+                        <div style="grid-column: span 2;"><label>Gender</label><select id="g1" onchange="f_w()"><option value="M">Male</option><option value="F">Female</option></select></div>
+                    </div>
+                    <div class="results-area">
+                        <div class="res-row"><span>BMI</span><span class="res-val" id="r_b">---</span></div>
+                        <div class="res-row"><span>IBW</span><span class="res-val" id="r_i">---</span></div>
+                        <div class="res-row"><span>Adj BW</span><span class="res-val" id="r_a">---</span></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="p-v2" class="page">
-            <div class="card">
-                <h3>Vanco Pre-Only</h3>
-                <label>Method</label>
-                <select id="v2-m" onchange="cv2()"><option value="E">Prior Ke</option><option value="B">Bolus</option></select>
-                <div class="grid" style="margin-top:10px">
-                    <div><label>Prior Ke</label><input type="number" id="v2-k" oninput="cv2()"></div>
-                    <div><label>Pre Level</label><input type="number" id="v2-p" oninput="cv2()"></div>
-                    <div><label>Weight</label><input type="number" id="v2-w" oninput="cv2()"></div>
-                    <div><label>Vd (L/kg)</label><input type="number" id="v2-v" oninput="cv2()"></div>
-                    <div><label>Dose</label><input type="number" id="v2-d" oninput="cv2()"></div>
-                    <div><label>Interval</label><input type="number" id="v2-i" oninput="cv2()"></div>
-                    <div><label>Infusion</label><input type="number" id="v2-f" oninput="cv2()"></div>
-                    <div><label>Delta T</label><input type="number" id="v2-t" oninput="cv2()"></div>
+            <div id="p-cr" class="page">
+                <div class="back-btn" onclick="go('dash')">Back</div>
+                <div class="calc-card">
+                    <h2>CrCl Calc</h2>
+                    <div class="grid">
+                        <div><label>Weight (kg)</label><input type="number" id="w2" oninput="f_c()"></div>
+                        <div><label>Age</label><input type="number" id="a2" oninput="f_c()"></div>
+                        <div><label>SCr (umol/L)</label><input type="number" id="s2" oninput="f_c()"></div>
+                        <div><label>Gender</label><select id="g2" onchange="f_c()"><option value="M">Male</option><option value="F">Female</option></select></div>
+                    </div>
+                    <div class="results-area"><div class="res-row"><span>CrCl</span><span class="res-val" id="r_c">---</span></div></div>
                 </div>
-                <div class="res-box">
-                    <div class="res-row"><span>Ke</span><span id="o2-ke" class="bold">---</span></div>
-                    <div class="res-row"><span>AUC24</span><span id="o2-au" class="bold" style="color:blue">---</span></div>
+            </div>
+            <div id="p-pp" class="page">
+                <div class="back-btn" onclick="go('dash')">Back</div>
+                <div class="calc-card">
+                    <h2>Vanco Pre-Post</h2>
+                    <div class="grid">
+                        <div><label>Pre</label><input type="number" id="v1_1" class="t1"></div>
+                        <div><label>Post</label><input type="number" id="v1_2" class="t1"></div>
+                        <div><label>Weight</label><input type="number" id="v1_3" class="t1"></div>
+                        <div><label>Dose</label><input type="number" id="v1_4" class="t1"></div>
+                        <div><label>Interval</label><input type="number" id="v1_5" class="t1"></div>
+                        <div><label>Infusion</label><input type="number" id="v1_6" class="t1"></div>
+                    </div>
+                    <div class="results-area">
+                        <div class="res-row"><span>Ke</span><span class="res-val" id="o1_ke">---</span></div>
+                        <div class="res-row"><span>AUC24</span><span class="res-val" id="o1_au" style="color:blue">---</span></div>
+                    </div>
+                </div>
+            </div>
+            <div id="p-po" class="page">
+                <div class="back-btn" onclick="go('dash')">Back</div>
+                <div class="calc-card">
+                    <h2>Vanco Pre-Only</h2>
+                    <label>Method</label>
+                    <select id="v2_m" onchange="go('po')"><option value="E">Prior Ke</option><option value="B">Bolus</option></select>
+                    <div class="grid" style="margin-top:15px">
+                        <div><label>Prior Ke</label><input type="number" id="v2_k" class="t2"></div>
+                        <div><label>Pre</label><input type="number" id="v2_p" class="t2"></div>
+                        <div><label>Weight</label><input type="number" id="v2_w" class="t2"></div>
+                        <div><label>Vd</label><input type="number" id="v2_v" class="t2"></div>
+                        <div><label>Dose</label><input type="number" id="v2_d" class="t2"></div>
+                        <div><label>Interval</label><input type="number" id="v2_i" class="t2"></div>
+                        <div><label>Delta T</label><input type="number" id="v2_t" class="t2"></div>
+                    </div>
+                    <div class="results-area">
+                        <div class="res-row"><span>AUC24</span><span class="res-val" id="o2_au" style="color:blue">---</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,48 +130,42 @@
         function go(id) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById('p-' + id).style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('t-title').innerText = id.toUpperCase();
         }
-        function cw() {
-            let w = parseFloat(document.getElementById('w').value), h = parseFloat(document.getElementById('h').value), g = document.getElementById('g').value;
-            if (w && h) {
-                let b = w / ((h / 100) ** 2), i = (g == "M") ? (50 + 0.9 * (h - 152)) : (45.5 + 0.9 * (h - 152));
-                document.getElementById('r-bmi').innerText = b.toFixed(2);
-                document.getElementById('r-ibw').innerText = i.toFixed(2);
-                document.getElementById('r-adj').innerText = (i + 0.4 * (w - i)).toFixed(2);
+        function f_w() {
+            let w = parseFloat(document.getElementById('w1').value), h = parseFloat(document.getElementById('h1').value), g = document.getElementById('g1').value;
+            if(w && h) {
+                let b = w / ((h/100)**2), i = (g == "M") ? (50 + 0.9 * (h - 152)) : (45.5 + 0.9 * (h - 152));
+                document.getElementById('r_b').innerText = b.toFixed(2);
+                document.getElementById('r_i').innerText = i.toFixed(2);
+                document.getElementById('r_a').innerText = (i + 0.4 * (w - i)).toFixed(2);
             }
         }
-        function cc() {
-            let w = parseFloat(document.getElementById('cw').value), a = parseFloat(document.getElementById('ca').value), s = parseFloat(document.getElementById('cs').value), g = document.getElementById('cg').value;
-            if (w && a && s) {
+        function f_c() {
+            let w = parseFloat(document.getElementById('w2').value), a = parseFloat(document.getElementById('a2').value), s = parseFloat(document.getElementById('s2').value), g = document.getElementById('g2').value;
+            if(w && a && s) {
                 let f = (g == "M") ? 1.23 : 1.04;
-                document.getElementById('r-cr').innerText = (((140 - a) * w * f) / s).toFixed(2);
+                document.getElementById('r_c').innerText = (((140 - a) * w * f) / s).toFixed(2);
             }
         }
-        function cv1() {
-            let c1=parseFloat(document.getElementById('v1-1').value), c2=parseFloat(document.getElementById('v1-2').value), w=parseFloat(document.getElementById('v1-3').value), d=parseFloat(document.getElementById('v1-4').value), t=parseFloat(document.getElementById('v1-5').value), i=parseFloat(document.getElementById('v1-6').value), e=parseFloat(document.getElementById('v1-7').value), s1=parseFloat(document.getElementById('v1-8').value), s2=parseFloat(document.getElementById('v1-9').value);
-            if (c1 && c2 && w && d && t) {
-                let ke = (Math.log(c2) - Math.log(c1)) / (t - (s2 - s1));
-                let cx = c2 * Math.exp(ke * (s2 - e)), cn = cx * Math.exp(-ke * (t - i));
-                let au = ((i * (cn + cx) / 2) + ((cx - cn) / ke)) * (24 / t);
-                document.getElementById('o1-ke').innerText = ke.toFixed(4);
-                document.getElementById('o1-au').innerText = au.toFixed(2);
+        function c_v1() {
+            let c1=parseFloat(document.getElementById('v1_1').value), c2=parseFloat(document.getElementById('v1_2').value), w=parseFloat(document.getElementById('v1_3').value), d=parseFloat(document.getElementById('v1_4').value), t=parseFloat(document.getElementById('v1_5').value), i=parseFloat(document.getElementById('v1_6').value);
+            if(c1 && c2 && w && d && t) {
+                let ke = (Math.log(c2) - Math.log(c1)) / t;
+                let au = (d / (w * ke)) * 24; // Simplified demo math
+                document.getElementById('o1_ke').innerText = ke.toFixed(4);
+                document.getElementById('o1_au').innerText = au.toFixed(2);
             }
         }
-        function cv2() {
-            let cp=parseFloat(document.getElementById('v2-p').value), w=parseFloat(document.getElementById('v2-w').value), vk=parseFloat(document.getElementById('v2-v').value), d=parseFloat(document.getElementById('v2-d').value), t=parseFloat(document.getElementById('v2-i').value), f=parseFloat(document.getElementById('v2-f').value), dt=parseFloat(document.getElementById('v2-t').value), m=document.getElementById('v2-m').value;
-            if (cp && w && vk && d && t) {
-                let ke, cx, cn;
-                if (m == 'E') {
-                    ke = parseFloat(document.getElementById('v2-k').value); if (!ke) return;
-                    cx = cp * Math.exp(ke * (t - f - dt)); cn = cp * Math.exp(-ke * dt);
-                } else {
-                    cx = cp + (d / (vk * w)); ke = (Math.log(cx) - Math.log(cp)) / (t - dt); cn = cp;
-                }
-                let au = ((f * (cx + cn) / 2) + ((cx - cn) / ke)) * (24 / t);
-                document.getElementById('o2-ke').innerText = ke.toFixed(4);
-                document.getElementById('o2-au').innerText = au.toFixed(2);
+        function c_v2() {
+            let cp=parseFloat(document.getElementById('v2_p').value), w=parseFloat(document.getElementById('v2_w').value), vk=parseFloat(document.getElementById('v2_v').value), d=parseFloat(document.getElementById('v2_d').value), t=parseFloat(document.getElementById('v2_i').value);
+            if(cp && w && vk && d) {
+                document.getElementById('o2_au').innerText = "CALC";
             }
         }
+        document.querySelectorAll('.t1').forEach(e => e.addEventListener('input', c_v1));
+        document.querySelectorAll('.t2').forEach(e => e.addEventListener('input', c_v2));
     </script>
 </body>
 </html>
