@@ -9,314 +9,243 @@
             --sidebar-bg: #0f172a;
             --sidebar-hover: #1e293b;
             --main-bg: #f1f5f9;
-            --vanco-slate: #334155;
-            --accent-green: #059669;
             --accent-blue: #3b82f6;
-            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
-
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--main-bg); margin: 0; display: flex; height: 100vh; color: #1e293b; overflow: hidden; }
-
-        /* SIDEBAR */
-        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h1 { font-size: 1.1rem; margin: 0; letter-spacing: 1px; font-weight: 800; }
+        body { font-family: sans-serif; background: var(--main-bg); margin: 0; display: flex; height: 100vh; color: #1e293b; overflow: hidden; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 800; }
         .nav-list { flex-grow: 1; padding: 20px 0; overflow-y: auto; }
-        .nav-label { font-size: 0.65rem; text-transform: uppercase; padding: 10px 25px; color: #64748b; font-weight: 700; letter-spacing: 1px; }
-        .nav-item { padding: 12px 25px; cursor: pointer; display: flex; align-items: center; transition: 0.2s; color: #94a3b8; font-size: 0.9rem; }
+        .nav-label { font-size: 0.65rem; text-transform: uppercase; padding: 10px 25px; color: #64748b; font-weight: 700; }
+        .nav-item { padding: 12px 25px; cursor: pointer; display: flex; align-items: center; color: #94a3b8; font-size: 0.9rem; }
         .nav-item:hover { background: var(--sidebar-hover); color: white; }
         .nav-item.active { background: var(--sidebar-hover); color: white; border-left: 4px solid var(--accent-blue); padding-left: 21px; }
-
-        /* MAIN CONTENT */
         .main { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; }
-        .header-bar { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index:100; }
-        .container { padding: 30px; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-
-        /* DASHBOARD GRID */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .tool-card { background: white; border-radius: 16px; padding: 25px; cursor: pointer; transition: 0.3s; border: 1px solid #e2e8f0; position: relative; box-shadow: var(--card-shadow); }
-        .tool-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-        .tool-card.green { border-top: 5px solid var(--accent-green); }
-        .tool-card.slate { border-top: 5px solid var(--vanco-slate); }
-        .badge { position: absolute; top: 15px; right: 15px; font-size: 0.6rem; font-weight: 800; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; }
-
-        /* CALCULATOR PAGES */
+        .header-bar { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 25px; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         .page { display: none; }
-        .calc-card { background: white; border-radius: 16px; padding: 25px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
-        .back-btn { display: inline-flex; align-items: center; color: var(--accent-blue); cursor: pointer; font-weight: 600; margin-bottom: 20px; font-size: 0.9rem; }
-        
-        /* INPUTS & GRID */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        label { font-size: 0.65rem; font-weight: 800; color: #475569; text-transform: uppercase; display: block; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1rem; background: #fffde7; box-sizing: border-box; }
-        .section-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px; padding: 10px; border-radius: 8px; color: white; background: var(--sidebar-bg); }
-        
-        /* RESULTS */
-        .results-area { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 20px; }
-        .res-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-        .res-val { font-weight: 700; color: #0f172a; }
-        .highlight { color: var(--accent-blue); font-weight: bold; }
-        .clinical-note { font-size: 0.75rem; color: #64748b; font-style: italic; margin-top: 5px; }
-        .stability-box { background: #eff6ff; padding: 12px; border-radius: 10px; border-left: 4px solid var(--accent-blue); margin-bottom: 20px; }
-        .hidden-results { display: none; }
-
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .grid { grid-template-columns: 1fr; }
-        }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .tool-card { background: white; border-radius: 12px; padding: 20px; cursor: pointer; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); border-top: 5px solid #cbd5e1; }
+        .tool-card.green { border-top-color: #059669; }
+        .tool-card.slate { border-top-color: #334155; }
+        .calc-card { background: white; border-radius: 12px; padding: 25px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        label { font-size: 0.65rem; font-weight: 800; color: #475569; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #fffde7; box-sizing: border-box; }
+        .section-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 20px 0 10px; padding: 10px; border-radius: 6px; color: white; background: var(--sidebar-bg); }
+        .results-area { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-top: 15px; }
+        .res-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+        .res-val { font-weight: 700; }
+        .back-btn { color: var(--accent-blue); cursor: pointer; font-weight: 600; margin-bottom: 15px; display: inline-block; }
+        @media (max-width: 768px) { .sidebar { display: none; } .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
-        <div class="sidebar-header"><h1>HKL TDM Assist</h1></div>
+        <div class="sidebar-header">HKL TDM Assist</div>
         <div class="nav-list">
-            <div class="nav-item active" id="nav-dash" onclick="showPage('dashboard')">🏠 Dashboard</div>
+            <div class="nav-item active" id="m-dash" onclick="go('dashboard')">🏠 Dashboard</div>
             <div class="nav-label">Weight & Renal</div>
-            <div class="nav-item" id="nav-weight" onclick="showPage('weight-calc')">⚖️ Dosing Weight</div>
-            <div class="nav-item" id="nav-crcl" onclick="showPage('crcl-calc')">🧪 Cockcroft-Gault CrCl</div>
-            <div class="nav-label">Antibiotics</div>
-            <div class="nav-item" id="nav-pp" onclick="showPage('vanco-pp')">💊 Vancomycin (P&P)</div>
-            <div class="nav-item" id="nav-po" onclick="showPage('vanco-po')">💊 Vancomycin (PO)</div>
+            <div class="nav-item" id="m-wt" onclick="go('weight')">⚖️ Dosing Weight</div>
+            <div class="nav-item" id="m-cr" onclick="go('crcl')">🧪 Cockcroft-Gault</div>
+            <div class="nav-label">Vancomycin</div>
+            <div class="nav-item" id="m-pp" onclick="go('vanco-pp')">💊 Pre & Post Levels</div>
+            <div class="nav-item" id="m-po" onclick="go('vanco-po')">💊 Pre Level Only</div>
         </div>
     </div>
-
     <div class="main">
         <div class="header-bar">
-            <div id="page-title" style="font-weight: 700; font-size: 1.1rem;">Clinical Dashboard</div>
-            <div style="font-size: 0.7rem; color: #64748b; text-align: right;">Hospital Kuala Lumpur<br>Pharmacy Department</div>
+            <div id="t-title" style="font-weight: 700;">Clinical Dashboard</div>
+            <div style="font-size: 0.7rem; color: #64748b; text-align: right;">HKL Pharmacy</div>
         </div>
-
         <div class="container">
-            <div id="page-dashboard" class="page" style="display: block;">
+            <div id="p-dashboard" class="page" style="display: block;">
                 <div class="dashboard-grid">
-                    <div class="tool-card green" onclick="showPage('weight-calc')">
-                        <h3>Dosing Weight</h3>
-                        <p>Calculate BMI, IBW, and Adjusted Body Weight.</p>
-                    </div>
-                    <div class="tool-card green" onclick="showPage('crcl-calc')">
-                        <h3>CrCl Calculator</h3>
-                        <p>Estimated CrCl using Cockcroft-Gault equation.</p>
-                    </div>
-                    <div class="tool-card slate" onclick="showPage('vanco-pp')">
-                        <span class="badge">VALIDATED</span>
-                        <h3>Vancomycin (Pre & Post)</h3>
-                        <p>Steady-state PK analysis using peak and trough levels.</p>
-                    </div>
-                    <div class="tool-card slate" onclick="showPage('vanco-po')">
-                        <span class="badge">VALIDATED</span>
-                        <h3>Vancomycin (Pre Only)</h3>
-                        <p>Calculate using Prior Ke or Bolus methods.</p>
-                    </div>
+                    <div class="tool-card green" onclick="go('weight')"><h3>Dosing Weight</h3><p>BMI, IBW, and Adjusted Weight.</p></div>
+                    <div class="tool-card green" onclick="go('crcl')"><h3>CrCl Calculator</h3><p>Cockcroft-Gault Equation.</p></div>
+                    <div class="tool-card slate" onclick="go('vanco-pp')"><h3>Vancomycin (P&P)</h3><p>Peak & Trough analysis.</p></div>
+                    <div class="tool-card slate" onclick="go('vanco-po')"><h3>Vancomycin (PO)</h3><p>Prior Ke or Bolus methods.</p></div>
                 </div>
             </div>
-
-            <div id="page-weight-calc" class="page">
-                <div class="back-btn" onclick="showPage('dashboard')">← Back</div>
+            <div id="p-weight" class="page">
+                <div class="back-btn" onclick="go('dashboard')">← Back</div>
                 <div class="calc-card">
                     <h2>Dosing Weight</h2>
                     <div class="grid">
-                        <div><label>Weight (kg)</label><input type="number" id="wt_val" oninput="calcWeight()"></div>
-                        <div><label>Height (cm)</label><input type="number" id="ht_val" oninput="calcWeight()"></div>
-                        <div style="grid-column: span 2;"><label>Gender</label><select id="gen_val" onchange="calcWeight()"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                        <div><label>Weight (kg)</label><input type="number" id="w_val" oninput="c_w()"></div>
+                        <div><label>Height (cm)</label><input type="number" id="h_val" oninput="c_w()"></div>
+                        <div style="grid-column: span 2;"><label>Gender</label><select id="g_val" onchange="c_w()"><option value="Male">Male</option><option value="Female">Female</option></select></div>
                     </div>
                     <div class="results-area">
-                        <div class="res-row"><span>BMI (kg/m²)</span><span class="res-val" id="res_bmi">---</span></div>
-                        <div class="res-row"><span>IBW (kg)</span><span class="res-val" id="res_ibw">---</span></div>
-                        <div class="res-row"><span>Adj BW (kg)</span><span class="res-val highlight" id="res_adj">---</span></div>
+                        <div class="res-row"><span>BMI</span><span class="res-val" id="r_bmi">---</span></div>
+                        <div class="res-row"><span>IBW (kg)</span><span class="res-val" id="r_ibw">---</span></div>
+                        <div class="res-row"><span>Adj BW (kg)</span><span class="res-val" id="r_adj">---</span></div>
                     </div>
                 </div>
             </div>
-
-            <div id="page-crcl-calc" class="page">
-                <div class="back-btn" onclick="showPage('dashboard')">← Back</div>
+            <div id="p-crcl" class="page">
+                <div class="back-btn" onclick="go('dashboard')">← Back</div>
                 <div class="calc-card">
                     <h2>Cockcroft-Gault CrCl</h2>
                     <div class="grid">
-                        <div><label>Dosing Weight (kg)</label><input type="number" id="cr_wt" oninput="calcCrcl()"></div>
-                        <div><label>Age (years)</label><input type="number" id="cr_age" oninput="calcCrcl()"></div>
-                        <div><label>SCr (umol/L)</label><input type="number" id="cr_scr" oninput="calcCrcl()"></div>
-                        <div><label>Gender</label><select id="cr_gen" onchange="calcCrcl()"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                        <div><label>Dosing Weight (kg)</label><input type="number" id="c_wt" oninput="c_c()"></div>
+                        <div><label>Age (years)</label><input type="number" id="c_ag" oninput="c_c()"></div>
+                        <div><label>SCr (umol/L)</label><input type="number" id="c_sc" oninput="c_c()"></div>
+                        <div><label>Gender</label><select id="c_ge" onchange="c_c()"><option value="Male">Male</option><option value="Female">Female</option></select></div>
                     </div>
-                    <div class="results-area">
-                        <div class="res-row"><span>CrCl (ml/min)</span><span class="res-val highlight" id="res_crcl">---</span></div>
-                    </div>
+                    <div class="results-area"><div class="res-row"><span>CrCl (ml/min)</span><span class="res-val" id="r_crcl">---</span></div></div>
                 </div>
             </div>
-
-            <div id="page-vanco-pp" class="page">
-                <div class="back-btn" onclick="showPage('dashboard')">← Back</div>
+            <div id="p-vanco-pp" class="page">
+                <div class="back-btn" onclick="go('dashboard')">← Back</div>
                 <div class="calc-card">
                     <h2>Vancomycin Pre & Post</h2>
                     <div class="grid">
-                        <div><label>Pre Level (mg/L)</label><input type="number" id="C7" class="trig-1"></div>
-                        <div><label>Post Level (mg/L)</label><input type="number" id="C8" class="trig-1"></div>
-                        <div><label>Weight (kg)</label><input type="number" id="C10" class="trig-1"></div>
-                        <div><label>Dose (mg)</label><input type="number" id="C11" class="trig-1"></div>
-                        <div><label>Interval (h)</label><input type="number" id="C12" class="trig-1"></div>
-                        <div><label>Infusion duration (h)</label><input type="number" id="C13" class="trig-1"></div>
+                        <div><label>Pre Level</label><input type="number" id="v1_pr" class="t1"></div>
+                        <div><label>Post Level</label><input type="number" id="v1_po" class="t1"></div>
+                        <div><label>Weight (kg)</label><input type="number" id="v1_wt" class="t1"></div>
+                        <div><label>Dose (mg)</label><input type="number" id="v1_ds" class="t1"></div>
+                        <div><label>Interval (h)</label><input type="number" id="v1_in" class="t1"></div>
+                        <div><label>Infusion (h)</label><input type="number" id="v1_if" class="t1"></div>
                     </div>
                     <div class="section-header">Sampling Times</div>
                     <div class="grid">
-                        <div><label>Infusion End Time</label><input type="number" id="C16" class="trig-1"></div>
-                        <div><label>Pre-sampling Time</label><input type="number" id="C17" class="trig-1"></div>
-                        <div><label>Post-sampling Time</label><input type="number" id="C18" class="trig-1"></div>
+                        <div><label>Infusion End</label><input type="number" id="v1_e" class="t1"></div>
+                        <div><label>Pre-sample</label><input type="number" id="v1_s1" class="t1"></div>
+                        <div><label>Post-sample</label><input type="number" id="v1_s2" class="t1"></div>
                     </div>
                     <div class="results-area">
-                        <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="out_Ke">---</span></div>
-                        <div class="res-row"><span>t½ (h)</span><span class="res-val" id="out_Thalf">---</span></div>
-                        <div class="res-row"><span>Vd (L/kg)</span><span class="res-val" id="out_Vdkg">---</span></div>
-                        <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="out_Cmax">---</span></div>
-                        <div class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="out_Cmin">---</span></div>
-                        <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="out_AUC">---</span></div>
+                        <div class="res-row"><span>Ke (h-1)</span><span class="res-val" id="o1_ke">---</span></div>
+                        <div class="res-row"><span>t1/2 (h)</span><span class="res-val" id="o1_th">---</span></div>
+                        <div class="res-row"><span>Vd (L/kg)</span><span class="res-val" id="o1_vd">---</span></div>
+                        <div class="res-row"><span>Cmax</span><span class="res-val" id="o1_cx">---</span></div>
+                        <div class="res-row"><span>Cmin</span><span class="res-val" id="o1_cn">---</span></div>
+                        <div class="res-row"><span>AUC24</span><span class="res-val" id="o1_au" style="color:#3b82f6">---</span></div>
                     </div>
-                    <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
+                    <div class="section-header" style="background:#059669">New Dose Adjustment</div>
                     <div class="grid">
-                        <div><label>New Dose (mg)</label><input type="number" id="nD" class="trig-1"></div>
-                        <div><label>New Interval (h)</label><input type="number" id="nT" class="trig-1"></div>
-                        <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="nI" class="trig-1"></div>
+                        <div><label>New Dose</label><input type="number" id="n1_ds" class="t1"></div>
+                        <div><label>New Interval</label><input type="number" id="n1_in" class="t1"></div>
+                        <div style="grid-column: span 2;"><label>New Infusion (h)</label><input type="number" id="n1_if" class="t1"></div>
                     </div>
-                    <div id="res_adj_1" class="results-area hidden-results" style="background:#f0fdf4;">
-                        <div class="res-row"><span>Exp. Cmax</span><span class="res-val" id="eCx"></span></div>
-                        <div class="res-row"><span>Exp. Cmin</span><span class="res-val" id="eCn"></span></div>
-                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val highlight" id="eAu"></span></div>
+                    <div id="r1_adj" style="display:none;" class="results-area">
+                        <div class="res-row"><span>Exp. Cmax</span><span class="res-val" id="e1_cx"></span></div>
+                        <div class="res-row"><span>Exp. Cmin</span><span class="res-val" id="e1_cn"></span></div>
+                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val" id="e1_au" style="color:#059669"></span></div>
                     </div>
                 </div>
             </div>
-
-            <div id="page-vanco-po" class="page">
-                <div class="back-btn" onclick="showPage('dashboard')">← Back</div>
+            <div id="p-vanco-po" class="page">
+                <div class="back-btn" onclick="go('dashboard')">← Back</div>
                 <div class="calc-card">
                     <h2>Vancomycin Pre-Only</h2>
                     <label>Method</label>
-                    <select id="po_method" onchange="togglePoMethod()"><option value="existing">Prior Ke Method</option><option value="bolus">Bolus Method</option></select>
-                    <div id="stability_criteria" class="stability-box"><div class="clinical-note">Use if: RP Stable, No major fluid shifts, Same clinical phase.</div></div>
-                    <div class="grid">
-                        <div id="row_prev_ke" style="grid-column: span 2;"><label>Prior Ke (h⁻¹)</label><input type="number" id="P_prev_ke" class="trig-2"></div>
-                        <div><label>Pre Level (mg/L)</label><input type="number" id="P_pre" class="trig-2"></div>
-                        <div><label>Weight (kg)</label><input type="number" id="P_wt" class="trig-2"></div>
-                        <div><label>Vd (L/kg)</label><input type="number" id="P_vdkg" class="trig-2"></div>
-                        <div><label>Dose (mg)</label><input type="number" id="P_dose" class="trig-2"></div>
-                        <div><label>Interval (h)</label><input type="number" id="P_tau" class="trig-2"></div>
-                        <div><label>Infusion duration (h)</label><input type="number" id="P_tinf" class="trig-2"></div>
-                        <div style="grid-column: span 2;"><label>Δt (h)</label><input type="number" id="P_dt" class="trig-2"></div>
+                    <select id="v2_me" onchange="t_po()"><option value="existing">Prior Ke Method</option><option value="bolus">Bolus Method</option></select>
+                    <div class="grid" style="margin-top:15px;">
+                        <div id="v2_rke" style="grid-column: span 2;"><label>Prior Ke (h-1)</label><input type="number" id="v2_pk" class="t2"></div>
+                        <div><label>Pre Level</label><input type="number" id="v2_pr" class="t2"></div>
+                        <div><label>Weight (kg)</label><input type="number" id="v2_wt" class="t2"></div>
+                        <div><label>Vd (L/kg)</label><input type="number" id="v2_vd" class="t2"></div>
+                        <div><label>Dose (mg)</label><input type="number" id="v2_ds" class="t2"></div>
+                        <div><label>Interval (h)</label><input type="number" id="v2_in" class="t2"></div>
+                        <div><label>Infusion (h)</label><input type="number" id="v2_if" class="t2"></div>
+                        <div style="grid-column: span 2;"><label>Delta t (h)</label><input type="number" id="v2_dt" class="t2"></div>
                     </div>
                     <div class="results-area">
-                        <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke">---</span></div>
-                        <div class="res-row"><span>Cmax</span><span class="res-val" id="po_Cx">---</span></div>
-                        <div id="po_cmin_row" class="res-row"><span>Cmin</span><span class="res-val" id="po_Cn">---</span></div>
-                        <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="po_Au">---</span></div>
+                        <div class="res-row"><span>Ke (h-1)</span><span class="res-val" id="o2_ke">---</span></div>
+                        <div class="res-row"><span>Cmax</span><span class="res-val" id="o2_cx">---</span></div>
+                        <div id="v2_cnr" class="res-row"><span>Cmin</span><span class="res-val" id="o2_cn">---</span></div>
+                        <div class="res-row"><span>AUC24</span><span class="res-val" id="o2_au" style="color:#3b82f6">---</span></div>
                     </div>
-                    <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
+                    <div class="section-header" style="background:#059669">New Dose Adjustment</div>
                     <div class="grid">
-                        <div><label>New Dose (mg)</label><input type="number" id="pn_dose" class="trig-2"></div>
-                        <div><label>New Interval (h)</label><input type="number" id="pn_tau" class="trig-2"></div>
+                        <div><label>New Dose</label><input type="number" id="n2_ds" class="t2"></div>
+                        <div><label>New Interval</label><input type="number" id="n2_in" class="t2"></div>
                     </div>
-                    <div id="res_adj_2" class="results-area hidden-results" style="background:#f0fdf4;">
-                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val highlight" id="po_ExpAu"></span></div>
+                    <div id="r2_adj" style="display:none;" class="results-area">
+                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val" id="e2_au" style="color:#059669"></span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
-        function showPage(id) {
+        function go(id) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById('page-' + id).style.display = 'block';
+            document.getElementById('p-' + id).style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            const navMap = {'dashboard':'nav-dash','weight-calc':'nav-weight','crcl-calc':'nav-crcl','vanco-pp':'nav-pp','vanco-po':'nav-po'};
-            if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
-            document.getElementById('page-title').innerText = id.includes('vanco') ? "Vancomycin Tool" : "Dashboard";
+            const m = {'dashboard':'m-dash','weight':'m-wt','crcl':'m-cr','vanco-pp':'m-pp','vanco-po':'m-po'};
+            if(m[id]) document.getElementById(m[id]).classList.add('active');
+            document.getElementById('t-title').innerText = id.toUpperCase();
+            window.scrollTo(0,0);
         }
-
-        function calcWeight() {
-            const wt = parseFloat(document.getElementById('wt_val').value), ht = parseFloat(document.getElementById('ht_val').value), gen = document.getElementById('gen_val').value;
-            if(wt && ht) {
-                const bmi = wt / ((ht/100)**2), ibw = (gen === "Male") ? (50 + 0.9 * (ht - 152)) : (45.5 + 0.9 * (ht - 152));
-                document.getElementById('res_bmi').innerText = bmi.toFixed(2);
-                document.getElementById('res_ibw').innerText = ibw.toFixed(2);
-                document.getElementById('res_adj').innerText = (ibw + 0.4 * (wt - ibw)).toFixed(2);
+        function c_w() {
+            const w = parseFloat(document.getElementById('w_val').value), h = parseFloat(document.getElementById('h_val').value), g = document.getElementById('g_val').value;
+            if(w && h) {
+                const b = w / ((h/100)**2), i = (g === "Male") ? (50 + 0.9 * (h - 152)) : (45.5 + 0.9 * (h - 152));
+                document.getElementById('r_bmi').innerText = b.toFixed(2);
+                document.getElementById('r_ibw').innerText = i.toFixed(2);
+                document.getElementById('r_adj').innerText = (i + 0.4 * (w - i)).toFixed(2);
             }
         }
-
-        function calcCrcl() {
-            const wt = parseFloat(document.getElementById('cr_wt').value), age = parseFloat(document.getElementById('cr_age').value), scr = parseFloat(document.getElementById('cr_scr').value), gen = document.getElementById('cr_gen').value;
-            if(wt && age && scr) {
-                const factor = (gen === "Male") ? 1.23 : 1.04;
-                document.getElementById('res_crcl').innerText = (((140 - age) * wt * factor) / scr).toFixed(2);
+        function c_c() {
+            const w = parseFloat(document.getElementById('c_wt').value), a = parseFloat(document.getElementById('c_ag').value), s = parseFloat(document.getElementById('c_sc').value), g = document.getElementById('c_ge').value;
+            if(w && a && s) {
+                const f = (g === "Male") ? 1.23 : 1.04;
+                document.getElementById('r_crcl').innerText = (((140 - a) * w * f) / s).toFixed(2);
             }
         }
-
-        function togglePoMethod() {
-            const method = document.getElementById('po_method').value;
-            document.getElementById('row_prev_ke').style.display = (method === 'existing') ? 'block' : 'none';
-            document.getElementById('po_cmin_row').style.display = (method === 'existing') ? 'flex' : 'none';
-            calculatePreOnly();
+        function t_po() {
+            const m = document.getElementById('v2_me').value;
+            document.getElementById('v2_rke').style.display = (m === 'existing') ? 'block' : 'none';
+            document.getElementById('v2_cnr').style.display = (m === 'existing') ? 'flex' : 'none';
+            c_v2();
         }
-
-        function calculatePrePost() {
-            const c7=parseFloat(document.getElementById('C7').value), c8=parseFloat(document.getElementById('C8').value), 
-                  c10=parseFloat(document.getElementById('C10').value), c11=parseFloat(document.getElementById('C11').value),
-                  c12=parseFloat(document.getElementById('C12').value), c13=parseFloat(document.getElementById('C13').value),
-                  c16=parseFloat(document.getElementById('C16').value), c17=parseFloat(document.getElementById('C17').value), 
-                  c18=parseFloat(document.getElementById('C18').value);
-            
-            if(!c7 || !c8 || !c10 || !c11 || !c12 || !c13) return;
-
-            const Ke = (Math.log(c8) - Math.log(c7)) / (c12 - (c18 - c17));
-            const Cmax = c8 * Math.exp(Ke * (c18 - c16)), Cmin = Cmax * Math.exp(-Ke * (c12 - c13));
-            const Vd_L = (c11 * (1 - Math.exp(-Ke * c13))) / (Cmax * c13 * Ke * (1 - Math.exp(-Ke * c12)));
-            const AUC24 = ((c13 * (Cmin + Cmax)/2) + ((Cmax - Cmin)/Ke)) * (24 / c12);
-
-            document.getElementById('out_Ke').innerText = Ke.toFixed(4);
-            document.getElementById('out_Thalf').innerText = (0.693/Ke).toFixed(2);
-            document.getElementById('out_Vdkg').innerText = (Vd_L / c10).toFixed(2);
-            document.getElementById('out_Cmax').innerText = Cmax.toFixed(2);
-            document.getElementById('out_Cmin').innerText = Cmin.toFixed(2);
-            document.getElementById('out_AUC').innerText = AUC24.toFixed(2);
-
-            const nD=parseFloat(document.getElementById('nD').value), nT=parseFloat(document.getElementById('nT').value), nI=parseFloat(document.getElementById('nI').value);
-            if(nD && nT && nI){
-                const exCx = (nD / (Vd_L * Ke * nI)) * ((1 - Math.exp(-Ke * nI)) / (1 - Math.exp(-Ke * nT)));
-                document.getElementById('eCx').innerText = exCx.toFixed(2);
-                document.getElementById('eCn').innerText = (exCx * Math.exp(-Ke * (nT - nI))).toFixed(2);
-                document.getElementById('eAu').innerText = (((nD * 24 / nT) / (c11 * 24 / c12)) * AUC24).toFixed(2);
-                document.getElementById('res_adj_1').style.display = 'block';
+        function c_v1() {
+            const c7=parseFloat(document.getElementById('v1_pr').value), c8=parseFloat(document.getElementById('v1_po').value), w=parseFloat(document.getElementById('v1_wt').value), d=parseFloat(document.getElementById('v1_ds').value), t=parseFloat(document.getElementById('v1_in').value), i=parseFloat(document.getElementById('v1_if').value), e=parseFloat(document.getElementById('v1_e').value), s1=parseFloat(document.getElementById('v1_s1').value), s2=parseFloat(document.getElementById('v1_s2').value);
+            if(!c7 || !c8 || !w || !d || !t || !i) return;
+            const ke = (Math.log(c8) - Math.log(c7)) / (t - (s2 - s1));
+            const cx = c8 * Math.exp(ke * (s2 - e)), cn = cx * Math.exp(-ke * (t - i));
+            const vd = (d * (1 - Math.exp(-ke * i))) / (cx * i * ke * (1 - Math.exp(-ke * t)));
+            const au = ((i * (cn + cx)/2) + ((cx - cn)/ke)) * (24 / t);
+            document.getElementById('o1_ke').innerText = ke.toFixed(4);
+            document.getElementById('o1_th').innerText = (0.693/ke).toFixed(2);
+            document.getElementById('o1_vd').innerText = (vd / w).toFixed(2);
+            document.getElementById('o1_cx').innerText = cx.toFixed(2);
+            document.getElementById('o1_cn').innerText = cn.toFixed(2);
+            document.getElementById('o1_au').innerText = au.toFixed(2);
+            const nd=parseFloat(document.getElementById('n1_ds').value), ni=parseFloat(document.getElementById('n1_in').value), nif=parseFloat(document.getElementById('n1_if').value);
+            if(nd && ni && nif) {
+                const ncx = (nd / (vd * ke * nif)) * ((1 - Math.exp(-ke * nif)) / (1 - Math.exp(-ke * ni)));
+                document.getElementById('e1_cx').innerText = ncx.toFixed(2);
+                document.getElementById('e1_cn').innerText = (ncx * Math.exp(-ke * (ni - nif))).toFixed(2);
+                document.getElementById('e1_au').innerText = (((nd * 24 / ni) / (d * 24 / t)) * au).toFixed(2);
+                document.getElementById('r1_adj').style.display = 'block';
             }
         }
-
-        function calculatePreOnly() {
-            const cp=parseFloat(document.getElementById('P_pre').value), bw=parseFloat(document.getElementById('P_wt').value),
-                  vk=parseFloat(document.getElementById('P_vdkg').value), ds=parseFloat(document.getElementById('P_dose').value),
-                  tu=parseFloat(document.getElementById('P_tau').value), ti=parseFloat(document.getElementById('P_tinf').value),
-                  dt=parseFloat(document.getElementById('P_dt').value), method = document.getElementById('po_method').value;
-
-            if(!cp || !bw || !vk || !ds || !tu) return;
-
-            let Ke, Cx, Cn;
-            if(method === 'existing') {
-                Ke = parseFloat(document.getElementById('P_prev_ke').value); if(!Ke) return;
-                Cx = cp * Math.exp(Ke * (tu - ti - dt)); Cn = cp * Math.exp(-Ke * dt);
-                document.getElementById('po_Cn').innerText = Cn.toFixed(2);
+        function c_v2() {
+            const cp=parseFloat(document.getElementById('v2_pr').value), w=parseFloat(document.getElementById('v2_wt').value), vk=parseFloat(document.getElementById('v2_vd').value), d=parseFloat(document.getElementById('v2_ds').value), t=parseFloat(document.getElementById('v2_in').value), i=parseFloat(document.getElementById('v2_if').value), dt=parseFloat(document.getElementById('v2_dt').value), m=document.getElementById('v2_me').value;
+            if(!cp || !w || !vk || !d || !t) return;
+            let ke, cx, cn;
+            if(m === 'existing') {
+                ke = parseFloat(document.getElementById('v2_pk').value); if(!ke) return;
+                cx = cp * Math.exp(ke * (t - i - dt)); cn = cp * Math.exp(-ke * dt);
+                document.getElementById('o2_cn').innerText = cn.toFixed(2);
             } else {
-                Cx = cp + (ds / (vk * bw)); Ke = (Math.log(Cx) - Math.log(cp)) / (tu - dt); Cn = cp;
+                cx = cp + (d / (vk * w)); ke = (Math.log(cx) - Math.log(cp)) / (t - dt); cn = cp;
             }
-
-            const AUC24 = ((ti * (Cx + Cn) / 2) + ((Cx - Cn) / Ke)) * (24 / tu);
-            document.getElementById('po_Ke').innerText = Ke.toFixed(4);
-            document.getElementById('po_Cx').innerText = Cx.toFixed(2);
-            document.getElementById('po_Au').innerText = AUC24.toFixed(2);
-
-            const pnd = parseFloat(document.getElementById('pn_dose').value), pnt = parseFloat(document.getElementById('pn_tau').value);
-            if(pnd && pnt) {
-                document.getElementById('po_ExpAu').innerText = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
-                document.getElementById('res_adj_2').style.display = 'block';
+            const au = ((i * (cx + cn) / 2) + ((cx - cn) / ke)) * (24 / t);
+            document.getElementById('o2_ke').innerText = ke.toFixed(4);
+            document.getElementById('o2_cx').innerText = cx.toFixed(2);
+            document.getElementById('o2_au').innerText = au.toFixed(2);
+            const nd = parseFloat(document.getElementById('n2_ds').value), ni = parseFloat(document.getElementById('n2_in').value);
+            if(nd && ni) {
+                document.getElementById('e2_au').innerText = (((nd * 24 / ni) / (d * 24 / t)) * au).toFixed(2);
+                document.getElementById('r2_adj').style.display = 'block';
             }
         }
-
-        document.querySelectorAll('.trig-1').forEach(el => el.addEventListener('input', calculatePrePost));
-        document.querySelectorAll('.trig-2').forEach(el => el.addEventListener('input', calculatePreOnly));
+        document.querySelectorAll('.t1').forEach(el => el.addEventListener('input', c_v1));
+        document.querySelectorAll('.t2').forEach(el => el.addEventListener('input', c_v2));
     </script>
 </body>
 </html>
