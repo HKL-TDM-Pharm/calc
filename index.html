@@ -33,7 +33,7 @@
         .header-bar { background: white; padding: 12px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index:100; }
         .container { padding: 20px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* PAGES & CARDS */
+        /* PAGES */
         .page { display: none; }
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
         .tool-card { background: white; border-radius: 12px; padding: 20px; cursor: pointer; transition: 0.2s; border: 1px solid #e2e8f0; text-align: center; box-shadow: var(--card-shadow); border-top: 4px solid #cbd5e1; }
@@ -45,7 +45,7 @@
         .calc-card { background: white; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
         .back-btn { display: inline-flex; align-items: center; color: var(--accent-blue); cursor: pointer; font-weight: 600; margin-bottom: 15px; font-size: 0.85rem; }
         
-        /* INPUT GRID - RESPONSIVE */
+        /* INPUT GRID */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         label { font-size: 0.65rem; font-weight: 800; color: #475569; text-transform: uppercase; display: block; margin-bottom: 4px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #fffde7; box-sizing: border-box; }
@@ -58,6 +58,9 @@
         .res-val { font-weight: 700; color: #0f172a; }
         .highlight { color: var(--accent-blue); font-weight: bold; }
         .hidden-results { display: none; }
+        
+        /* THE DESCRIPTION BOX */
+        .stability-box { background: #f0f9ff; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-blue); margin-bottom: 15px; }
         .clinical-note { font-size: 0.7rem; color: #64748b; font-style: italic; margin-top: 5px; line-height: 1.3; }
 
         @media (max-width: 600px) {
@@ -134,12 +137,12 @@
                 <div class="calc-card">
                     <h2>Vancomycin Pre Post</h2>
                     <div class="grid">
-                        <div><label>Pre Level (mg/L)</label><input type="number" id="C7" class="trig-1"></div>
-                        <div><label>Post Level (mg/L)</label><input type="number" id="C8" class="trig-1"></div>
+                        <div><label>Pre Level</label><input type="number" id="C7" class="trig-1"></div>
+                        <div><label>Post Level</label><input type="number" id="C8" class="trig-1"></div>
                         <div><label>Weight (kg)</label><input type="number" id="C10" class="trig-1"></div>
                         <div><label>Dose (mg)</label><input type="number" id="C11" class="trig-1"></div>
                         <div><label>Interval (h)</label><input type="number" id="C12" class="trig-1"></div>
-                        <div><label>Infusion duration (h)</label><input type="number" id="C13" class="trig-1"></div>
+                        <div><label>Infusion duration</label><input type="number" id="C13" class="trig-1"></div>
                     </div>
                     <div class="section-header" style="background:#7f8c8d">Sampling Times</div>
                     <div class="grid">
@@ -155,7 +158,6 @@
                         <div class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="out_Cmin">---</span></div>
                         <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="out_AUC">---</span></div>
                     </div>
-                    
                     <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
                     <div class="grid">
                         <div><label>New Dose (mg)</label><input type="number" id="nD" class="trig-1"></div>
@@ -163,22 +165,20 @@
                         <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="nI" class="trig-1"></div>
                     </div>
                     <div id="res_adj_1" class="results-area hidden-results" style="background:#f0fdf4;">
-                        <div class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="eCx"></span></div>
-                        <div class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="eCn"></span></div>
-                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--accent-green)" id="eAu"></span></div>
+                        <div class="res-row"><span>Exp. Cmax</span><span class="res-val" id="eCx"></span></div>
+                        <div class="res-row"><span>Exp. Cmin</span><span class="res-val" id="eCn"></span></div>
+                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val highlight" style="color:var(--accent-green)" id="eAu"></span></div>
                     </div>
-
                     <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
                     <div class="grid">
                         <div><label>Cmeasured / Cmax</label><input type="number" id="Wm" placeholder="Blank=Cmax" class="trig-1"></div>
-                        <div><label>Target Level (mg/L)</label><input type="number" id="Wt" class="trig-1"></div>
+                        <div><label>Target Level</label><input type="number" id="Wt" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>Withhold Duration (h)</label><input type="number" id="Wd" class="trig-1"></div>
                     </div>
                     <div id="res_wh_1" class="results-area hidden-results" style="background:#fef2f2;">
                         <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="whT"></span></div>
                         <div class="res-row"><span>Exp. Cmin after w/h</span><span class="res-val highlight" style="color:var(--accent-red)" id="whC"></span></div>
                     </div>
-
                     <button style="background:#64748b; width:100%; padding:12px; border:none; color:white; margin-top:15px; border-radius:10px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
@@ -189,7 +189,14 @@
                     <h2>Vancomycin Pre</h2>
                     <div style="margin-bottom:15px;">
                         <label>Calculation Method</label>
-                        <select id="po_method" onchange="togglePoMethod()"><option value="existing" selected>Prior Ke Method</option><option value="bolus">Bolus Method</option></select>
+                        <select id="po_method" onchange="togglePoMethod()">
+                            <option value="existing" selected>Prior Ke Method</option>
+                            <option value="bolus">Bolus Method</option>
+                        </select>
+                        <div id="stability_criteria" class="stability-box" style="margin-top:10px;">
+                            <div class="clinical-note" style="color:var(--sidebar-bg); font-weight:bold; font-style:normal;">Use if:</div>
+                            <div class="clinical-note">RP Stable, No major fluid shifts, Same clinical phase (not acute AKI recovery, etc.)</div>
+                        </div>
                     </div>
                     <div class="grid">
                         <div id="row_prev_ke" style="grid-column: span 2;"><label>Prior Calculated Ke (h-1)</label><input type="number" id="P_prev_ke" class="trig-2" step="0.0001"></div>
@@ -209,7 +216,6 @@
                         <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="po_Au">---</span></div>
                         <div class="clinical-note" id="po_caution" style="display:none;">*May overestimate AUC24, correlate clinically.</div>
                     </div>
-
                     <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
                     <div class="grid">
                         <div><label>New Dose (mg)</label><input type="number" id="pn_dose" class="trig-2"></div>
@@ -221,7 +227,6 @@
                         <div id="pn_exp_cmin_row" class="res-row"><span>Exp. Cmin</span><span class="res-val" id="po_ExpCn"></span></div>
                         <div class="res-row"><span>Exp. AUC24</span><span class="res-val highlight" style="color:var(--accent-green)" id="po_ExpAu"></span></div>
                     </div>
-
                     <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
                     <div class="grid">
                         <div><label>Cmeasured / Cmax</label><input type="number" id="P_mw" placeholder="Blank=Cmax" class="trig-2"></div>
@@ -232,7 +237,6 @@
                         <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="po_wh"></span></div>
                         <div class="res-row"><span>Exp. Cmin after w/h</span><span class="res-val highlight" style="color:var(--accent-red)" id="po_whC"></span></div>
                     </div>
-
                     <button style="background:#64748b; width:100%; padding:12px; border:none; color:white; margin-top:15px; border-radius:10px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
@@ -271,6 +275,8 @@
         function togglePoMethod() {
             const method = document.getElementById('po_method').value;
             document.getElementById('row_prev_ke').style.display = (method === 'existing') ? 'block' : 'none';
+            document.getElementById('stability_criteria').style.display = (method === 'existing') ? 'block' : 'none';
+            document.getElementById('po_caution').style.display = (method === 'existing') ? 'none' : 'block';
             document.getElementById('po_cmin_row').style.display = (method === 'existing') ? 'flex' : 'none';
             calculatePreOnly();
         }
