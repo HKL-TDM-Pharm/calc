@@ -29,11 +29,11 @@
         .nav-item:hover { background: var(--sidebar-hover); color: white; }
         .nav-item.active { background: var(--sidebar-hover); color: white; border-left: 4px solid var(--accent-blue); padding-left: 21px; }
 
+        /* UPDATED SIDEBAR FOOTER */
         .sidebar-footer { padding: 20px 25px; border-top: 1px solid rgba(255,255,255,0.05); background: #0b1120; }
-        .dept-text { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; font-style: italic; }
-        .hosp-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+        .copyright-text { font-size: 0.7rem; color: #94a3b8; line-height: 1.5; font-style: italic; }
 
-        /* MAIN AREA */
+        /* MAIN CONTENT AREA */
         .main { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; position: relative; }
         .header-bar { background: white; padding: 12px 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; position: sticky; top:0; z-index:100; min-height: 60px; box-sizing: border-box; }
         
@@ -49,8 +49,6 @@
         .tool-card h3 { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--sidebar-bg); }
         .tool-card.green { border-top-color: var(--accent-green); }
         .tool-card.slate { border-top-color: var(--vanco-slate); }
-
-        .dashboard-footer { text-align: center; color: #94a3b8; font-size: 0.7rem; margin-top: 40px; padding-bottom: 20px; }
 
         /* CALCULATOR PAGES */
         .page { display: none; }
@@ -99,8 +97,9 @@
             <div class="nav-item" id="nav-po" onclick="showPage('vanco-po')">💊 Vancomycin (Pre)</div>
         </div>
         <div class="sidebar-footer">
-            <div class="dept-text">Pharmacy Department</div>
-            <div class="hosp-text">Hospital Kuala Lumpur</div>
+            <div class="copyright-text">
+                © 2026 Pharmacy Department,<br>Hospital Kuala Lumpur
+            </div>
         </div>
     </div>
 
@@ -121,9 +120,6 @@
                         <div class="tool-card slate" onclick="showPage('vanco-pp')"><h3>💊 Vancomycin (Pre & Post)</h3></div>
                         <div class="tool-card slate" onclick="showPage('vanco-po')"><h3>💊 Vancomycin (Pre)</h3></div>
                     </div>
-                </div>
-                <div class="dashboard-footer">
-                    © 2026 - Pharmacy Department, Hospital Kuala Lumpur
                 </div>
             </div>
 
@@ -164,7 +160,7 @@
                         <div><label>Weight (kg)</label><input type="number" id="C10" class="trig-1"></div>
                         <div><label>Dose (mg)</label><input type="number" id="C11" class="trig-1"></div>
                         <div><label>Interval (h)</label><input type="number" id="C12" class="trig-1"></div>
-                        <div><label>Infusion (h)</label><input type="number" id="C13" class="trig-1"></div>
+                        <div><label>Infusion duration (h)</label><input type="number" id="C13" class="trig-1"></div>
                     </div>
                     <div class="section-header" style="background:#7f8c8d">Sampling Times</div>
                     <div class="time-instruction">Use decimal hours (e.g., 9:30 AM = 9.5, 2:30 PM = 14.5)</div>
@@ -185,7 +181,7 @@
                     <div class="grid">
                         <div><label>New Dose (mg)</label><input type="number" id="nD" class="trig-1"></div>
                         <div><label>New Interval (h)</label><input type="number" id="nT" class="trig-1"></div>
-                        <div style="grid-column: span 2;"><label>New Infusion (h)</label><input type="number" id="nI" class="trig-1"></div>
+                        <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="nI" class="trig-1"></div>
                     </div>
                     <div id="res_adj_1" class="results-area hidden-results" style="background:#f0fdf4;">
                         <div class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="eCx"></span></div>
@@ -223,8 +219,12 @@
                         <div><label>Vd (L/kg)</label><input type="number" id="P_vdkg" class="trig-2"></div>
                         <div><label>Dose (mg)</label><input type="number" id="P_dose" class="trig-2"></div>
                         <div><label>Interval (h)</label><input type="number" id="P_tau" class="trig-2"></div>
-                        <div><label>Infusion (h)</label><input type="number" id="P_tinf" class="trig-2"></div>
-                        <div style="grid-column: span 2;"><label>Sampling–Dose Interval (decimal h)</label><input type="number" id="P_dt" class="trig-2" placeholder="e.g. 0.5"></div>
+                        <div><label>Infusion duration (h)</label><input type="number" id="P_tinf" class="trig-2"></div>
+                        <div style="grid-column: span 2;">
+                            <label>Sampling–Dose Interval</label>
+                            <div class="time-instruction" style="text-align:left; margin-bottom:5px;">Decimal hours early (e.g., 0.5)</div>
+                            <input type="number" id="P_dt" class="trig-2">
+                        </div>
                     </div>
                     <div class="results-area">
                         <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke">---</span></div>
@@ -233,6 +233,27 @@
                         <div id="po_cmin_row" class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="po_Cn">---</span></div>
                         <div class="res-row"><span>AUC24 (mg.h/L)</span><span class="res-val highlight" id="po_Au">---</span></div>
                     </div>
+                    <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
+                    <div class="grid">
+                        <div><label>New Dose (mg)</label><input type="number" id="pn_dose" class="trig-2"></div>
+                        <div><label>New Interval (h)</label><input type="number" id="pn_tau" class="trig-2"></div>
+                        <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="pn_inf" class="trig-2"></div>
+                    </div>
+                    <div id="res_adj_2" class="results-area hidden-results" style="background:#f0fdf4;">
+                        <div id="pn_exp_cmax_row" class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx"></span></div>
+                        <div id="pn_exp_cmin_row" class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn"></span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--accent-green)" id="po_ExpAu"></span></div>
+                    </div>
+                    <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
+                    <div class="grid">
+                        <div><label>Cmeas / Cmax (mg/L)</label><input type="number" id="P_mw" placeholder="Blank=Cmax" class="trig-2"></div>
+                        <div><label>Target Level (mg/L)</label><input type="number" id="P_tw" class="trig-2"></div>
+                        <div style="grid-column: span 2;"><label>Duration (h)</label><input type="number" id="P_wd" class="trig-2"></div>
+                    </div>
+                    <div id="res_wh_2" class="results-area hidden-results" style="background:#fef2f2;">
+                        <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="po_wh"></span></div>
+                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" style="color:var(--accent-red)" id="po_whC"></span></div>
+                    </div>
                     <button class="reset-btn" onclick="resetPage('page-vanco-po')">Reset Patient</button>
                 </div>
             </div>
@@ -240,7 +261,6 @@
     </div>
 
     <script>
-        // HISTORY MANAGEMENT FOR MOBILE BACK BUTTON
         window.onpopstate = function() {
             showPage('home', true);
         };
@@ -367,6 +387,30 @@
             document.getElementById('po_Thalf').innerText = (0.693/Ke).toFixed(2);
             document.getElementById('po_Cx').innerText = Cx.toFixed(2);
             document.getElementById('po_Au').innerText = AUC24.toFixed(2);
+            const pnd = parseFloat(document.getElementById('pn_dose').value), pnt = parseFloat(document.getElementById('pn_tau').value), pni = parseFloat(document.getElementById('pn_inf').value);
+            if(pnd && pnt && pni) {
+                const exCx = (pnd / (vk * bw * Ke * pni)) * ((1 - Math.exp(-Ke * pni)) / (1 - Math.exp(-Ke * pnt)));
+                const exCn = exCx * Math.exp(-Ke * (pnt - pni));
+                const exAu = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
+                document.getElementById('po_ExpAu').innerText = exAu;
+                if (method === 'existing') {
+                    document.getElementById('pn_exp_cmax_row').style.display = 'none';
+                    document.getElementById('pn_exp_cmin_row').style.display = 'none';
+                } else {
+                    document.getElementById('pn_exp_cmax_row').style.display = 'flex';
+                    document.getElementById('pn_exp_cmin_row').style.display = 'flex';
+                    document.getElementById('po_ExpCx').innerText = exCx.toFixed(2);
+                    document.getElementById('po_ExpCn').innerText = exCn.toFixed(2);
+                }
+                document.getElementById('res_adj_2').style.display = 'block';
+            } else { document.getElementById('res_adj_2').style.display = 'none'; }
+            const pmIn=parseFloat(document.getElementById('P_mw').value), tw=parseFloat(document.getElementById('P_tw').value), pwd=parseFloat(document.getElementById('P_wd').value);
+            const pm = !isNaN(pmIn) ? pmIn : Cx;
+            if(pm && (tw || pwd)) {
+                if(tw) document.getElementById('po_wh').innerText = ((Math.log(pm)-Math.log(tw))/Ke).toFixed(2);
+                if(pwd) document.getElementById('po_whC').innerText = (pm*Math.exp(-Ke*Wd)).toFixed(2);
+                document.getElementById('res_wh_2').style.display = 'block';
+            } else { document.getElementById('res_wh_2').style.display = 'none'; }
         }
 
         document.querySelectorAll('.trig-1').forEach(el => el.addEventListener('input', calculatePrePost));
