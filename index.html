@@ -33,7 +33,7 @@
         .dept-text { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; font-style: italic; }
         .hosp-text { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-top: 4px; }
 
-        /* MAIN CONTENT AREA */
+        /* MAIN AREA */
         .main { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; position: relative; }
         .header-bar { background: white; padding: 12px 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; position: sticky; top:0; z-index:100; min-height: 60px; box-sizing: border-box; }
         
@@ -42,11 +42,11 @@
 
         .container { padding: 20px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        /* DASHBOARD GRID (Forced 2x2 on Desktop) */
+        /* DASHBOARD GRID */
         .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
         .tool-card { background: white; border-radius: 12px; padding: 25px; cursor: pointer; transition: 0.2s; border: 1px solid #e2e8f0; text-align: center; box-shadow: var(--card-shadow); border-top: 4px solid #cbd5e1; }
-        .tool-card:hover { transform: translateY(-3px); border-color: var(--accent-blue); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .tool-card h3 { margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--sidebar-bg); }
+        .tool-card:hover { transform: translateY(-3px); border-color: var(--accent-blue); }
+        .tool-card h3 { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--sidebar-bg); }
         .tool-card.green { border-top-color: var(--accent-green); }
         .tool-card.slate { border-top-color: var(--vanco-slate); }
 
@@ -57,14 +57,15 @@
         label { font-size: 0.65rem; font-weight: 800; color: #475569; text-transform: uppercase; display: block; margin-bottom: 4px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #fffde7; box-sizing: border-box; }
         
-        .section-header { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin: 20px 0 10px; padding: 8px; border-radius: 6px; color: white; background: var(--sidebar-bg); text-align: center; }
+        .section-header { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin: 20px 0 5px; padding: 8px; border-radius: 6px; color: white; background: var(--sidebar-bg); text-align: center; }
+        .time-instruction { font-size: 0.65rem; color: #64748b; text-align: center; margin-bottom: 12px; font-style: italic; }
         
         .results-area { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 15px; }
         .res-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
         .res-val { font-weight: 700; color: #0f172a; }
         .highlight { color: var(--accent-blue); font-weight: bold; }
-        .hidden-results { display: none; }
-        
+        .reset-btn { background: #64748b; width: 100%; padding: 12px; border: none; color: white; margin-top: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+
         .stability-box { background: #f0f9ff; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-blue); margin-bottom: 15px; }
         .clinical-note { font-size: 0.7rem; color: #64748b; font-style: italic; margin-top: 5px; line-height: 1.3; }
 
@@ -93,7 +94,7 @@
             <div class="nav-item" id="nav-weight" onclick="showPage('weight-calc')">⚖️ Dosing Weight</div>
             <div class="nav-item" id="nav-crcl" onclick="showPage('crcl-calc')">🧪 Cockcroft-Gault CrCl</div>
             <div class="nav-label">Antibiotics</div>
-            <div class="nav-item" id="nav-pp" onclick="showPage('vanco-pp')">💊 Vancomycin (Pre Post)</div>
+            <div class="nav-item" id="nav-pp" onclick="showPage('vanco-pp')">💊 Vancomycin (Pre & Post)</div>
             <div class="nav-item" id="nav-po" onclick="showPage('vanco-po')">💊 Vancomycin (Pre)</div>
         </div>
 
@@ -116,9 +117,9 @@
                     <p style="color: #64748b; font-size: 0.9rem;">Clinical Pharmacokinetics Tool</p>
                     <div class="dashboard-grid">
                         <div class="tool-card green" onclick="showPage('weight-calc')"><h3>⚖️ Dosing Weight</h3></div>
-                        <div class="tool-card green" onclick="showPage('crcl-calc')"><h3>🧪 CrCl Calculator</h3></div>
-                        <div class="tool-card slate" onclick="showPage('vanco-pp')"><h3>💊 Vanco (Pre Post)</h3></div>
-                        <div class="tool-card slate" onclick="showPage('vanco-po')"><h3>💊 Vanco (Pre)</h3></div>
+                        <div class="tool-card green" onclick="showPage('crcl-calc')"><h3>🧪 Cockcroft-Gault CrCl</h3></div>
+                        <div class="tool-card slate" onclick="showPage('vanco-pp')"><h3>💊 Vancomycin (Pre & Post)</h3></div>
+                        <div class="tool-card slate" onclick="showPage('vanco-po')"><h3>💊 Vancomycin (Pre)</h3></div>
                     </div>
                 </div>
             </div>
@@ -128,13 +129,14 @@
                     <div class="grid">
                         <div><label>Weight (kg)</label><input type="number" id="wt_val" oninput="calcWeight()"></div>
                         <div><label>Height (cm)</label><input type="number" id="ht_val" oninput="calcWeight()"></div>
-                        <div style="grid-column: span 2;"><label>Gender</label><select id="gen_val" onchange="calcWeight()"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                        <div style="grid-column: span 2;"><label>Gender</label><select id="gen_val" onchange="calcWeight()"><option value="" disabled selected>Select Gender</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
                     </div>
                     <div class="results-area">
                         <div class="res-row"><span>BMI (kg/m²)</span><span class="res-val" id="res_bmi">---</span></div>
                         <div class="res-row"><span>IBW (kg)</span><span class="res-val" id="res_ibw">---</span></div>
                         <div class="res-row"><span>Adj BW (kg)</span><span class="res-val highlight" id="res_adj">---</span></div>
                     </div>
+                    <button class="reset-btn" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
 
@@ -144,58 +146,60 @@
                         <div><label>Dosing Weight (kg)</label><input type="number" id="cr_wt" oninput="calcCrcl()"></div>
                         <div><label>Age (years)</label><input type="number" id="cr_age" oninput="calcCrcl()"></div>
                         <div><label>SCr (umol/L)</label><input type="number" id="cr_scr" oninput="calcCrcl()"></div>
-                        <div><label>Gender</label><select id="cr_gen" onchange="calcCrcl()"><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                        <div><label>Gender</label><select id="cr_gen" onchange="calcCrcl()"><option value="" disabled selected>Select Gender</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
                     </div>
                     <div class="results-area"><div class="res-row"><span>CrCl (ml/min)</span><span class="res-val highlight" id="res_crcl">---</span></div></div>
+                    <button class="reset-btn" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
 
             <div id="page-vanco-pp" class="page">
                 <div class="calc-card">
                     <div class="grid">
-                        <div><label>Pre Level</label><input type="number" id="C7" class="trig-1"></div>
-                        <div><label>Post Level</label><input type="number" id="C8" class="trig-1"></div>
+                        <div><label>Pre Level (mg/L)</label><input type="number" id="C7" class="trig-1"></div>
+                        <div><label>Post Level (mg/L)</label><input type="number" id="C8" class="trig-1"></div>
                         <div><label>Weight (kg)</label><input type="number" id="C10" class="trig-1"></div>
                         <div><label>Dose (mg)</label><input type="number" id="C11" class="trig-1"></div>
                         <div><label>Interval (h)</label><input type="number" id="C12" class="trig-1"></div>
                         <div><label>Infusion (h)</label><input type="number" id="C13" class="trig-1"></div>
                     </div>
                     <div class="section-header" style="background:#7f8c8d">Sampling Times</div>
+                    <div class="time-instruction">Use decimal hours (e.g., 9:30 AM = 9.5, 2:30 PM = 14.5)</div>
                     <div class="grid">
                         <div><label>Infusion End</label><input type="number" id="C16" class="trig-1"></div>
                         <div><label>Pre-sample</label><input type="number" id="C17" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>Post-sample</label><input type="number" id="C18" class="trig-1"></div>
                     </div>
                     <div class="results-area">
-                        <div class="res-row"><span>Ke (h-1)</span><span class="res-val" id="out_Ke">---</span></div>
+                        <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="out_Ke">---</span></div>
                         <div class="res-row"><span>t½ (h)</span><span class="res-val" id="out_Thalf">---</span></div>
                         <div class="res-row"><span>Vd (L/kg)</span><span class="res-val" id="out_Vdkg">---</span></div>
-                        <div class="res-row"><span>Cmax</span><span class="res-val" id="out_Cmax">---</span></div>
-                        <div class="res-row"><span>Cmin</span><span class="res-val" id="out_Cmin">---</span></div>
-                        <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="out_AUC">---</span></div>
+                        <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="out_Cmax">---</span></div>
+                        <div class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="out_Cmin">---</span></div>
+                        <div class="res-row"><span>AUC24 (mg.h/L)</span><span class="res-val highlight" id="out_AUC">---</span></div>
                     </div>
                     <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
                     <div class="grid">
-                        <div><label>New Dose</label><input type="number" id="nD" class="trig-1"></div>
-                        <div><label>New Interval</label><input type="number" id="nT" class="trig-1"></div>
+                        <div><label>New Dose (mg)</label><input type="number" id="nD" class="trig-1"></div>
+                        <div><label>New Interval (h)</label><input type="number" id="nT" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>New Infusion (h)</label><input type="number" id="nI" class="trig-1"></div>
                     </div>
                     <div id="res_adj_1" class="results-area hidden-results" style="background:#f0fdf4;">
-                        <div class="res-row"><span>Exp. Cmax</span><span class="res-val" id="eCx"></span></div>
-                        <div class="res-row"><span>Exp. Cmin</span><span class="res-val" id="eCn"></span></div>
-                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val highlight" style="color:var(--accent-green)" id="eAu"></span></div>
+                        <div class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="eCx"></span></div>
+                        <div class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="eCn"></span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--accent-green)" id="eAu"></span></div>
                     </div>
                     <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
                     <div class="grid">
-                        <div><label>Cmeas / Cmax</label><input type="number" id="Wm" placeholder="Blank=Cmax" class="trig-1"></div>
-                        <div><label>Target Level</label><input type="number" id="Wt" class="trig-1"></div>
+                        <div><label>Cmeas / Cmax (mg/L)</label><input type="number" id="Wm" placeholder="Blank=Cmax" class="trig-1"></div>
+                        <div><label>Target Level (mg/L)</label><input type="number" id="Wt" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>Duration (h)</label><input type="number" id="Wd" class="trig-1"></div>
                     </div>
                     <div id="res_wh_1" class="results-area hidden-results" style="background:#fef2f2;">
                         <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="whT"></span></div>
-                        <div class="res-row"><span>Exp. Cmin after w/h</span><span class="res-val highlight" style="color:var(--accent-red)" id="whC"></span></div>
+                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" style="color:var(--accent-red)" id="whC"></span></div>
                     </div>
-                    <button style="background:#64748b; width:100%; padding:12px; border:none; color:white; margin-top:15px; border-radius:10px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Reset Patient</button>
+                    <button class="reset-btn" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
 
@@ -210,44 +214,48 @@
                         </div>
                     </div>
                     <div class="grid">
-                        <div id="row_prev_ke" style="grid-column: span 2;"><label>Prior Calculated Ke (h-1)</label><input type="number" id="P_prev_ke" class="trig-2" step="0.0001"></div>
-                        <div><label>Pre Level</label><input type="number" id="P_pre" class="trig-2"></div>
+                        <div id="row_prev_ke" style="grid-column: span 2;"><label>Prior Calculated Ke (h⁻¹)</label><input type="number" id="P_prev_ke" class="trig-2" step="0.0001"></div>
+                        <div><label>Pre Level (mg/L)</label><input type="number" id="P_pre" class="trig-2"></div>
                         <div><label>Weight (kg)</label><input type="number" id="P_wt" class="trig-2"></div>
                         <div><label>Vd (L/kg)</label><input type="number" id="P_vdkg" class="trig-2"></div>
                         <div><label>Dose (mg)</label><input type="number" id="P_dose" class="trig-2"></div>
                         <div><label>Interval (h)</label><input type="number" id="P_tau" class="trig-2"></div>
                         <div><label>Infusion (h)</label><input type="number" id="P_tinf" class="trig-2"></div>
-                        <div style="grid-column: span 2;"><label>Sampling–Dose Interval (h)</label><input type="number" id="P_dt" class="trig-2"></div>
+                        <div style="grid-column: span 2;">
+                            <label>Sampling–Dose Interval</label>
+                            <div class="time-instruction" style="text-align:left; margin-bottom:5px;">Time Early (e.g., 30 mins early = 0.5)</div>
+                            <input type="number" id="P_dt" class="trig-2">
+                        </div>
                     </div>
                     <div class="results-area">
-                        <div class="res-row"><span>Ke (h-1)</span><span class="res-val" id="po_Ke">---</span></div>
+                        <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke">---</span></div>
                         <div class="res-row"><span>t½ (h)</span><span class="res-val" id="po_Thalf">---</span></div>
                         <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="po_Cx">---</span></div>
                         <div id="po_cmin_row" class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="po_Cn">---</span></div>
-                        <div class="res-row"><span>AUC24</span><span class="res-val highlight" id="po_Au">---</span></div>
+                        <div class="res-row"><span>AUC24 (mg.h/L)</span><span class="res-val highlight" id="po_Au">---</span></div>
                     </div>
                     <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
                     <div class="grid">
-                        <div><label>New Dose</label><input type="number" id="pn_dose" class="trig-2"></div>
-                        <div><label>New Interval</label><input type="number" id="pn_tau" class="trig-2"></div>
+                        <div><label>New Dose (mg)</label><input type="number" id="pn_dose" class="trig-2"></div>
+                        <div><label>New Interval (h)</label><input type="number" id="pn_tau" class="trig-2"></div>
                         <div style="grid-column: span 2;"><label>New Infusion (h)</label><input type="number" id="pn_inf" class="trig-2"></div>
                     </div>
                     <div id="res_adj_2" class="results-area hidden-results" style="background:#f0fdf4;">
-                        <div id="pn_exp_cmax_row" class="res-row"><span>Exp. Cmax</span><span class="res-val" id="po_ExpCx"></span></div>
-                        <div id="pn_exp_cmin_row" class="res-row"><span>Exp. Cmin</span><span class="res-val" id="po_ExpCn"></span></div>
-                        <div class="res-row"><span>Exp. AUC24</span><span class="res-val highlight" style="color:var(--accent-green)" id="po_ExpAu"></span></div>
+                        <div id="pn_exp_cmax_row" class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx"></span></div>
+                        <div id="pn_exp_cmin_row" class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn"></span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--accent-green)" id="po_ExpAu"></span></div>
                     </div>
                     <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
                     <div class="grid">
-                        <div><label>Cmeas / Cmax</label><input type="number" id="P_mw" placeholder="Blank=Cmax" class="trig-2"></div>
-                        <div><label>Target Level</label><input type="number" id="P_tw" class="trig-2"></div>
+                        <div><label>Cmeas / Cmax (mg/L)</label><input type="number" id="P_mw" placeholder="Blank=Cmax" class="trig-2"></div>
+                        <div><label>Target Level (mg/L)</label><input type="number" id="P_tw" class="trig-2"></div>
                         <div style="grid-column: span 2;"><label>Duration (h)</label><input type="number" id="P_wd" class="trig-2"></div>
                     </div>
                     <div id="res_wh_2" class="results-area hidden-results" style="background:#fef2f2;">
                         <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="po_wh"></span></div>
-                        <div class="res-row"><span>Exp. Cmin after w/h</span><span class="res-val highlight" style="color:var(--accent-red)" id="po_whC"></span></div>
+                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" style="color:var(--accent-red)" id="po_whC"></span></div>
                     </div>
-                    <button style="background:#64748b; width:100%; padding:12px; border:none; color:white; margin-top:15px; border-radius:10px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Reset Patient</button>
+                    <button class="reset-btn" onclick="location.reload()">Reset Patient</button>
                 </div>
             </div>
         </div>
@@ -265,7 +273,7 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const navMap = {'weight-calc':'nav-weight','crcl-calc':'nav-crcl','vanco-pp':'nav-pp','vanco-po':'nav-po'};
             if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
-            const titles = {'home':'Home','weight-calc':'Dosing Weight','crcl-calc':'Renal Function','vanco-pp':'Vancomycin Pre Post','vanco-po':'Vancomycin Pre'};
+            const titles = {'home':'Home','weight-calc':'Dosing Weight','crcl-calc':'Cockcroft-Gault CrCl','vanco-pp':'Vancomycin (Pre & Post)','vanco-po':'Vancomycin (Pre)'};
             document.getElementById('page-title').innerText = titles[id];
             if(window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) toggleMenu();
             window.scrollTo(0,0);
@@ -273,7 +281,7 @@
 
         function calcWeight() {
             const wt = parseFloat(document.getElementById('wt_val').value), ht = parseFloat(document.getElementById('ht_val').value), gen = document.getElementById('gen_val').value;
-            if(wt && ht) {
+            if(wt && ht && gen) {
                 const bmi = wt / ((ht/100)**2), ibw = (gen === "Male") ? (50 + 0.9 * (ht - 152)) : (45.5 + 0.9 * (ht - 152));
                 document.getElementById('res_bmi').innerText = bmi.toFixed(2);
                 document.getElementById('res_ibw').innerText = ibw.toFixed(2);
@@ -283,7 +291,7 @@
 
         function calcCrcl() {
             const wt = parseFloat(document.getElementById('cr_wt').value), age = parseFloat(document.getElementById('cr_age').value), scr = parseFloat(document.getElementById('cr_scr').value), gen = document.getElementById('cr_gen').value;
-            if(wt && age && scr) {
+            if(wt && age && scr && gen) {
                 const factor = (gen === "Male") ? 1.23 : 1.04;
                 document.getElementById('res_crcl').innerText = (((140 - age) * wt * factor) / scr).toFixed(2);
             }
@@ -343,12 +351,12 @@
             let Ke, Cx, Cn;
             if (method === 'existing') {
                 if (!prevKe) return; Ke = prevKe;
-                Cx = cp * Math.exp(Ke * (tu - ti - dt));
-                Cn = cp * Math.exp(-Ke * dt);
+                Cx = cp * Math.exp(Ke * (tu - ti - (dt || 0)));
+                Cn = cp * Math.exp(-Ke * (dt || 0));
                 document.getElementById('po_Cn').innerText = Cn.toFixed(2);
             } else {
                 Cx = cp + (ds / (vk * bw));
-                Ke = (Math.log(Cx) - Math.log(cp)) / (tu - dt);
+                Ke = (Math.log(Cx) - Math.log(cp)) / (tu - (dt || 0));
                 Cn = cp;
             }
             const AUC_inf = ti * ((Cx + Cn) / 2);
@@ -379,7 +387,7 @@
             const pm = !isNaN(pmIn) ? pmIn : Cx;
             if(pm && (tw || pwd)) {
                 if(tw) document.getElementById('po_wh').innerText = ((Math.log(pm)-Math.log(tw))/Ke).toFixed(2);
-                if(pwd) document.getElementById('po_whC').innerText = (pm*Math.exp(-Ke*pwd)).toFixed(2);
+                if(pwd) document.getElementById('po_whC').innerText = (pm*Math.exp(-Ke*Wd)).toFixed(2);
                 document.getElementById('res_wh_2').style.display = 'block';
             } else { document.getElementById('res_wh_2').style.display = 'none'; }
         }
