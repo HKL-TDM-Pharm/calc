@@ -165,7 +165,7 @@
                         <div style="grid-column: span 2;"><label>Post-sample</label><input type="number" id="C18" class="trig-1"></div>
                     </div>
 
-                    <div id="pp_pk_results" class="hidden-until-ready">
+                    <div id="pp_output_container" class="hidden-until-ready">
                         <div class="results-area">
                             <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="out_Ke"></span></div>
                             <div class="res-row"><span>t½ (h)</span><span class="res-val" id="out_Thalf"></span></div>
@@ -225,7 +225,7 @@
                         </div>
                     </div>
 
-                    <div id="po_pk_results" class="hidden-until-ready">
+                    <div id="po_output_container" class="hidden-until-ready">
                         <div class="results-area">
                             <div class="res-row"><span>Ke (h⁻¹)</span><span class="res-val" id="po_Ke"></span></div>
                             <div class="res-row"><span>t½ (h)</span><span class="res-val" id="po_Thalf"></span></div>
@@ -319,7 +319,7 @@
                   c12=parseFloat(document.getElementById('C12').value), c13=parseFloat(document.getElementById('C13').value),
                   c16=parseFloat(document.getElementById('C16').value), c17=parseFloat(document.getElementById('C17').value), 
                   c18=parseFloat(document.getElementById('C18').value);
-            const pkRes = document.getElementById('pp_pk_results');
+            const pkRes = document.getElementById('pp_output_container');
             if(!c7 || !c8 || !c10 || !c11 || !c12 || !c13 || isNaN(c18-c17)) { pkRes.style.display = 'none'; return; }
             pkRes.style.display = 'block';
             const Ke = (Math.log(c8) - Math.log(c7)) / (c12 - (c18 - c17));
@@ -355,7 +355,7 @@
                   tu=parseFloat(document.getElementById('P_tau').value), ti=parseFloat(document.getElementById('P_tinf').value),
                   dt=parseFloat(document.getElementById('P_dt').value), method=document.getElementById('po_method').value,
                   prevKe=parseFloat(document.getElementById('P_prev_ke').value);
-            const pkRes = document.getElementById('po_pk_results');
+            const pkRes = document.getElementById('po_output_container');
             if(!cp || !bw || !vk || !ds || !tu || !ti) { pkRes.style.display = 'none'; return; }
             let Ke, Cx, Cn;
             if (method === 'existing') { if (!prevKe) {pkRes.style.display = 'none'; return;} Ke = prevKe; Cx = cp * Math.exp(Ke * (tu - ti - (dt || 0))); Cn = cp * Math.exp(-Ke * (dt || 0)); document.getElementById('po_Cn').innerText = Cn.toFixed(2); }
@@ -368,7 +368,8 @@
             const adjBox = document.getElementById('res_adj_2');
             if(pnd && pnt && pni) {
                 const exCx = (pnd / (vk * bw * Ke * pni)) * ((1 - Math.exp(-Ke * pni)) / (1 - Math.exp(-Ke * pnt)));
-                document.getElementById('po_ExpCx').innerText = exCx.toFixed(2); document.getElementById('po_ExpCn').innerText = (exCx * Math.exp(-Ke * (pnt - pni))).toFixed(2);
+                document.getElementById('po_ExpCx').innerText = exCx.toFixed(2);
+                document.getElementById('po_ExpCn').innerText = (exCx * Math.exp(-Ke * (pnt - pni))).toFixed(2);
                 document.getElementById('po_ExpAu').innerText = (((pnd * 24 / pnt) / (ds * 24 / tu)) * AUC24).toFixed(2);
                 adjBox.style.display = 'block';
             } else { adjBox.style.display = 'none'; }
