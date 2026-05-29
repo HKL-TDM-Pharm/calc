@@ -58,7 +58,8 @@
         .results-area { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 15px; }
         .res-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
         .res-val { font-weight: 700; color: #0f172a; }
-        .highlight { color: var(--accent-blue); font-weight: bold; }
+        /* Highlight color removed as requested, keeping bold weight */
+        .highlight { font-weight: 700; color: #0f172a; } 
         .reset-btn { background: #64748b; width: 100%; padding: 12px; border: none; color: white; margin-top: 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
         .stability-box { background: #f0f9ff; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-blue); margin-bottom: 15px; }
@@ -156,7 +157,7 @@
                         <div><label>Infusion duration (h)</label><input type="number" id="C13" class="trig-1"></div>
                     </div>
                     <div class="section-header" style="background:#7f8c8d">Sampling Times</div>
-                    <div class="time-instruction">Use decimal hours (e.g., 9:30 AM = 9.5)</div>
+                    <div class="time-instruction">Use decimal hours (e.g., 9:30 AM = 9.5, 2:30 PM = 14.5)</div>
                     <div class="grid">
                         <div><label>Infusion End</label><input type="number" id="C16" class="trig-1"></div>
                         <div><label>Pre-sample</label><input type="number" id="C17" class="trig-1"></div>
@@ -178,10 +179,10 @@
                         <div><label>New Interval (h)</label><input type="number" id="nT" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="nI" class="trig-1"></div>
                     </div>
-                    <div id="res_adj_1_area" class="results-area" style="background:#f0fdf4;">
+                    <div class="results-area" style="background:#f0fdf4;">
                         <div class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="eCx">---</span></div>
                         <div class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="eCn">---</span></div>
-                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--accent-green)" id="eAu">---</span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" id="eAu">---</span></div>
                     </div>
 
                     <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
@@ -190,9 +191,9 @@
                         <div><label>Target Level (mg/L)</label><input type="number" id="Wt" class="trig-1"></div>
                         <div style="grid-column: span 2;"><label>Duration (h)</label><input type="number" id="Wd" class="trig-1"></div>
                     </div>
-                    <div id="res_wh_1_area" class="results-area" style="background:#fef2f2;">
+                    <div class="results-area" style="background:#fef2f2;">
                         <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="whT">---</span></div>
-                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" style="color:var(--accent-red)" id="whC">---</span></div>
+                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" id="whC">---</span></div>
                     </div>
 
                     <button class="reset-btn" onclick="resetPage('page-vanco-pp')">Reset Patient</button>
@@ -204,7 +205,10 @@
                     <div style="margin-bottom:15px;">
                         <label>Calculation Method</label>
                         <select id="po_method" onchange="togglePoMethod()"><option value="existing" selected>Prior Ke Method</option><option value="bolus">Bolus Method</option></select>
-                        <div id="stability_criteria" class="stability-box" style="margin-top:10px;"><div class="clinical-note">Use if: RP Stable, No major fluid shifts, Same clinical phase.</div></div>
+                        <div id="stability_criteria" class="stability-box" style="margin-top:10px;">
+                            <div class="clinical-note" style="color:var(--sidebar-bg); font-weight:bold; font-style:normal;">Use if:</div>
+                            <div class="clinical-note">RP Stable, No major fluid shifts, Same clinical phase.</div>
+                        </div>
                     </div>
                     <div class="grid">
                         <div id="row_prev_ke" style="grid-column: span 2;"><label>Prior Calculated Ke (h⁻¹)</label><input type="number" id="P_prev_ke" class="trig-2" step="0.0001"></div>
@@ -214,7 +218,11 @@
                         <div><label>Dose (mg)</label><input type="number" id="P_dose" class="trig-2"></div>
                         <div><label>Interval (h)</label><input type="number" id="P_tau" class="trig-2"></div>
                         <div><label>Infusion duration (h)</label><input type="number" id="P_tinf" class="trig-2"></div>
-                        <div style="grid-column: span 2;"><label>Sampling–Dose Interval (h)</label><div class="time-instruction" style="text-align:left; margin-bottom:5px;">Time interval between pre sampling and dose</div><input type="number" id="P_dt" class="trig-2"></div>
+                        <div style="grid-column: span 2;">
+                            <label>Sampling–Dose Interval (h)</label>
+                            <div class="time-instruction" style="text-align:left; margin-bottom:5px;">Time interval between pre sampling and dose</div>
+                            <input type="number" id="P_dt" class="trig-2">
+                        </div>
                     </div>
 
                     <div class="results-area">
@@ -224,7 +232,7 @@
                         <div id="po_cmin_row" class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="po_Cn">---</span></div>
                         <div class="res-row"><span>AUC24 (mg.h/L)</span><span class="res-val highlight" id="po_Au">---</span></div>
                     </div>
-
+                    
                     <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
                     <div class="grid">
                         <div><label>New Dose (mg)</label><input type="number" id="pn_dose" class="trig-2"></div>
@@ -232,9 +240,9 @@
                         <div style="grid-column: span 2;"><label>New Infusion duration (h)</label><input type="number" id="pn_inf" class="trig-2"></div>
                     </div>
                     <div class="results-area" style="background:#f0fdf4;">
-                        <div id="po_exp_cmax_row" class="res-row"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx">---</span></div>
-                        <div id="po_exp_cmin_row" class="res-row"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn">---</span></div>
-                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" style="color:var(--accent-green)" id="po_ExpAu">---</span></div>
+                        <div id="po_exp_cmax_row" class="res-row" style="display:none;"><span>Exp. Cmax (mg/L)</span><span class="res-val" id="po_ExpCx">---</span></div>
+                        <div id="po_exp_cmin_row" class="res-row" style="display:none;"><span>Exp. Cmin (mg/L)</span><span class="res-val" id="po_ExpCn">---</span></div>
+                        <div class="res-row"><span>Exp. AUC24 (mg.h/L)</span><span class="res-val highlight" id="po_ExpAu">---</span></div>
                     </div>
 
                     <div class="section-header" style="background:var(--accent-red)">Time to Withhold</div>
@@ -245,9 +253,8 @@
                     </div>
                     <div class="results-area" style="background:#fef2f2;">
                         <div class="res-row"><span>Time w/h (h)</span><span class="res-val" id="po_wh">---</span></div>
-                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" style="color:var(--accent-red)" id="po_whC">---</span></div>
+                        <div class="res-row"><span>Exp. Cmin after w/h (mg/L)</span><span class="res-val highlight" id="po_whC">---</span></div>
                     </div>
-
                     <button class="reset-btn" onclick="resetPage('page-vanco-po')">Reset Patient</button>
                 </div>
             </div>
@@ -343,7 +350,6 @@
                   tu=parseFloat(document.getElementById('P_tau').value), ti=parseFloat(document.getElementById('P_tinf').value),
                   dt=parseFloat(document.getElementById('P_dt').value), method=document.getElementById('po_method').value,
                   prevKe=parseFloat(document.getElementById('P_prev_ke').value);
-            // dt (Sampling interval) is now mandatory for results to appear
             if(!cp || !bw || !vk || !ds || !tu || !ti || isNaN(dt)) { 
                 document.getElementById('po_Ke').innerText = '---'; document.getElementById('po_Thalf').innerText = '---';
                 document.getElementById('po_Cx').innerText = '---'; document.getElementById('po_Cn').innerText = '---';
