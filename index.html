@@ -224,6 +224,7 @@
                         <div class="res-row"><span>Cmax (mg/L)</span><span class="res-val" id="po_Cx">---</span></div>
                         <div id="po_cmin_row" class="res-row"><span>Cmin (mg/L)</span><span class="res-val" id="po_Cn">---</span></div>
                         <div class="res-row"><span>AUC24 (mg.h/L)</span><span class="res-val" id="po_Au">---</span></div>
+                        <div id="po_bolus_caution" class="clinical-note" style="display: none; color: #475569; margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 8px;">*May overestimate AUC24, to interpret with caution and correlate clinically.</div>
                     </div>
                     
                     <div class="section-header" style="background:var(--accent-green)">New Dose Adjustment</div>
@@ -296,9 +297,11 @@
             document.getElementById('po_cmin_row').style.display = (m === 'existing') ? 'flex' : 'none';
             document.getElementById('po_exp_cmax_row').style.display = (m === 'existing') ? 'none' : 'flex';
             document.getElementById('po_exp_cmin_row').style.display = (m === 'existing') ? 'none' : 'flex';
+            document.getElementById('po_bolus_caution').style.display = (m === 'existing') ? 'none' : 'block';
             calculatePreOnly();
         }
 
+        // HKL Trapezoidal Formula Implementation
         function calculateHKLAUC(Cx, Cn, Ke, ti, tu) {
             if (Ke <= 0) return 0;
             const AUCinf = ti * ((Cn + Cx) / 2);
